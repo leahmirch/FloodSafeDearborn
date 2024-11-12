@@ -38,5 +38,5 @@ need to add *****
 
 ## Notes
 
-- **Image Uploads**: Uploaded images are stored in the `uploads` folder in the project directory.
-- **Rich Text Editor**: The self-introduction field on both `register.php` and `profile.php` uses Quill, allowing users to add formatted text.
+- **Convert PHP to Python / HTML / CSS**
+- **Add History Section for README**
