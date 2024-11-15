@@ -10,33 +10,98 @@ need to add *****
 
 ## How to Use
 
-1. **Setup**: Ensure you have XAMPP or any local server with PHP support, as well as SQLite enabled.
+### Instructions to Run the Converted Project
 
-2. **Database Setup**:
-   - This project uses SQLite, which automatically creates a `user_db.sqlite` file in the project folder upon first connection.
-   - The `db.php` file handles database connection and ensures the necessary `users` table is created if it doesn't exist.
+#### **1. Install Python**
+Ensure you have Python 3.7 or later installed on your system. You can download it from [python.org](https://www.python.org/).
 
-3. **Running the Project**:
-   - Place the project files in your server’s root directory (e.g., `htdocs` folder in XAMPP).
-   - Start the server and open the browser at `http://localhost/project_folder_name`.
+---
 
-4. **User Registration**:
-   - Go to the `register.php` page to create a new account.
-   - Fill in the username, email, password, upload an optional profile image, and write a self-introduction in the rich text editor.
-   - Submit the form to register.
+#### **2. Install Required Libraries**
+Open a terminal or command prompt, navigate to the project directory, and install the required Python libraries:
 
-5. **Login**:
-   - Go to `login.php` to log in with your registered username and password.
-   - Upon successful login, you’ll be redirected to your homepage (`home.php`).
+```bash
+pip install flask werkzeug
+```
 
-6. **Profile Update**:
-   - On your homepage, click "Edit Profile" to navigate to `profile.php`.
-   - Here, you can update your password, change your profile image, and edit your self-introduction using the rich text editor.
+---
 
-7. **Logout**:
-   - Click "Logout" on the homepage to log out of your account.
+#### **3. Set Up the Database**
+The project uses an SQLite database. The setup script will automatically create the `user_db.sqlite` file and the necessary `users` table.
+
+To manually initialize or verify the database:
+
+1. Ensure the `backend/database.py` script has the `setup_database()` function correctly defined.
+2. Run the script to create the database:
+   ```bash
+   python backend/database.py
+   ```
+
+This will create a `user_db.sqlite` file in the project directory with a table called `users`.
+
+---
+
+#### **4. Start the Flask Application**
+Run the Flask application from the `backend` folder. Navigate to the `backend/` directory in your terminal and execute:
+
+```bash
+python backend/app.py
+```
+
+By default, the Flask server will start on `http://127.0.0.1:5000`.
+
+---
+
+#### **5. Access the Application**
+Open a web browser and go to the following URLs:
+- **Registration Page**: `http://127.0.0.1:5000/register`
+- **Login Page**: `http://127.0.0.1:5000/login`
+- **Home Page** (after login): `http://127.0.0.1:5000/home`
+
+---
+
+#### **6. Folder Structure**
+Ensure your project folder structure looks like this:
+
+```
+FloodSafeDearborn/
+├── backend/
+│   ├── app.py              # Flask application
+│   ├── auth.py             # User authentication logic
+│   ├── database.py         # Database setup
+├── frontend/
+│   ├── templates/          # HTML templates
+│   │   ├── layout.html
+│   │   ├── register.html
+│   │   ├── login.html
+│   │   └── home.html
+│   └── static/
+│       ├── css/
+│       │   └── styles.css
+│       └── uploads/        # For user-uploaded images
+├── user_db.sqlite          # SQLite database (created after setup)
+```
+
+---
+
+#### **7. Debugging**
+To debug the application, you can use Flask's built-in debug mode. Start the server with:
+
+```bash
+FLASK_ENV=development python backend/app.py
+```
+---
+
+## History Documentation
+#### 10/29/24 
+- Leah Mirch: Initial Flood Safe Dearborn commit
+#### 11/05/24 
+- Leah Mirch: Updated starting version
+#### 11/10/24 
+- Paul Murariu: Uploaded frontend templates from Figma
+#### 11/15/24 
+- Leah Mirch: Converted PHP to Python / HTML / CSS
 
 ## Notes
 
-- **Convert PHP to Python / HTML / CSS**
-- **Add History Section for README**
+No notes at this time.
