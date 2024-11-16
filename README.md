@@ -6,7 +6,11 @@ With all of this information in mind, FloodSafeDearborn focuses on the accessibi
 
 ## Features
 
-need to add *****
+- **Interactive Flood Map**: Displays real-time flood data on an interactive map to help residents identify flood-prone areas and take necessary precautions.
+- **Notification System**: Allows users to set up alerts for flooding near their location, enabling timely evacuation or preparations.
+- **Data Analytics for Emergency Routes**: Provides information on safe routes during flood events, helping users avoid flooded areas.
+- **Flood Preparedness Resources**: Offers resources and links to professional organizations, such as the Wayne County Drain Commissioner, and homeowner tips for flood preparedness.
+- **Customizable User Experience**: Users can personalize their settings for receiving alerts and accessing resources.
 
 ## How to Use
 
@@ -15,7 +19,6 @@ need to add *****
 #### **1. Install Python**
 Ensure you have Python 3.7 or later installed on your system. You can download it from [python.org](https://www.python.org/).
 
----
 
 #### **2. Install Required Libraries**
 Open a terminal or command prompt, navigate to the project directory, and install the required Python libraries:
@@ -23,8 +26,6 @@ Open a terminal or command prompt, navigate to the project directory, and instal
 ```bash
 pip install flask werkzeug
 ```
-
----
 
 #### **3. Set Up the Database**
 The project uses an SQLite database. The setup script will automatically create the `user_db.sqlite` file and the necessary `users` table.
@@ -39,8 +40,6 @@ To manually initialize or verify the database:
 
 This will create a `user_db.sqlite` file in the project directory with a table called `users`.
 
----
-
 #### **4. Start the Flask Application**
 Run the Flask application from the `backend` folder. Navigate to the `backend/` directory in your terminal and execute:
 
@@ -50,15 +49,11 @@ python backend/app.py
 
 By default, the Flask server will start on `http://127.0.0.1:5000`.
 
----
-
 #### **5. Access the Application**
 Open a web browser and go to the following URLs:
 - **Registration Page**: `http://127.0.0.1:5000/register`
 - **Login Page**: `http://127.0.0.1:5000/login`
 - **Home Page** (after login): `http://127.0.0.1:5000/home`
-
----
 
 #### **6. Folder Structure**
 Ensure your project folder structure looks like this:
@@ -66,23 +61,32 @@ Ensure your project folder structure looks like this:
 ```
 FloodSafeDearborn/
 ├── backend/
-│   ├── app.py              # Flask application
-│   ├── auth.py             # User authentication logic
-│   ├── database.py         # Database setup
+│   ├── app.py              
+│   ├── auth.py             
+│   ├── database.py         
 ├── frontend/
-│   ├── templates/          # HTML templates
+│   ├── figma/    
+│   │   ├── homepage.zip
+│   │   ├── interactive_map.zip
+│   │   └── user_dashboard.zip
+│   ├── templates/          
+│   │   ├── about.html
+│   │   ├── contact.html
+│   │   ├── home.html
 │   │   ├── layout.html
-│   │   ├── register.html
+│   │   ├── index.html
+│   │   ├── layout.html
 │   │   ├── login.html
-│   │   └── home.html
+│   │   ├── register.html
+│   │   ├── resources.html
+│   │   └── safety_tips.html
 │   └── static/
 │       ├── css/
+│       │   ├── index.css
 │       │   └── styles.css
-│       └── uploads/        # For user-uploaded images
+│       └── img/        
 ├── user_db.sqlite          # SQLite database (created after setup)
 ```
-
----
 
 #### **7. Debugging**
 To debug the application, you can use Flask's built-in debug mode. Start the server with:
@@ -90,7 +94,6 @@ To debug the application, you can use Flask's built-in debug mode. Start the ser
 ```bash
 FLASK_ENV=development python backend/app.py
 ```
----
 
 ## History Documentation
 #### 10/29/24 
@@ -101,7 +104,7 @@ FLASK_ENV=development python backend/app.py
 - Paul Murariu: Uploaded frontend templates from Figma
 #### 11/15/24 
 - Leah Mirch: Converted PHP to Python / HTML / CSS
+- Leah Mirch: Worked on Index page, and styling for register / login / logout
 
 ## Notes
-
 No notes at this time.

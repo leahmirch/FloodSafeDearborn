@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from auth import register_user, authenticate_user
-from database import get_connection 
+from database import get_connection
 import os
 
-# Specify the correct locations for templates and static files
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
 UPLOAD_FOLDER = '../frontend/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -33,7 +36,7 @@ def login():
             session['user_id'] = user['id']
             return redirect(url_for('home'))
         else:
-            flash(user)  # user contains error message
+            flash(user) 
     return render_template('login.html')
 
 @app.route('/home')
@@ -53,6 +56,22 @@ def home():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/resources')
+def resources():
+    return render_template('resources.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/safety_tips')
+def safety_tips():
+    return render_template('safety_tips.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
