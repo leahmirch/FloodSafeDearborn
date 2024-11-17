@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-box">
+    <h1>Flood Safety Tips</h1>
+    <p>Flooding can be dangerous and cause significant damage to property and communities. Being prepared and knowing how to respond can save lives and reduce losses. Below, you’ll find practical tips to help protect yourself, your home, and your community from the effects of flooding, along with links to valuable resources for further guidance.</p>
+
+    <h2>Protecting Yourself</h2>
+    <ul>
+        <li><strong>Stay Informed:</strong> Monitor local weather reports and flood alerts through reliable sources like <a href="https://weather.gov" target="_blank">Weather.gov</a>.</li>
+        <li><strong>Evacuate Early:</strong> If authorities advise evacuation, do so promptly and follow established evacuation routes.</li>
+        <li><strong>Avoid Floodwaters:</strong> Never walk, swim, or drive through floodwaters. Just six inches of moving water can knock you off your feet, and one foot of water can sweep away vehicles.</li>
+        <li><strong>Emergency Kit:</strong> Prepare an emergency kit that includes water, non-perishable food, a flashlight, batteries, a first-aid kit, medications, and important documents.</li>
+    </ul>
+
+    <h2>Protecting Your Home</h2>
+    <ul>
+        <li><strong>Waterproof Your Basement:</strong> Seal basement walls with waterproofing compounds to prevent water seepage.</li>
+        <li><strong>Install Sump Pumps:</strong> Use a sump pump to help drain water from your basement. Consider a battery-powered backup in case of power outages.</li>
+        <li><strong>Elevate Utilities:</strong> Raise electrical appliances, furnaces, and other utilities above expected flood levels to prevent damage.</li>
+        <li><strong>Clear Gutters and Drains:</strong> Regularly clean gutters and storm drains to ensure proper water flow and prevent clogs.</li>
+        <li><strong>Sandbags:</strong> Use sandbags to divert water away from your property in the event of a flood warning.</li>
+    </ul>
+
+    <h2>Protecting Your Community</h2>
+    <ul>
+        <li><strong>Report Flooding:</strong> Notify local authorities and platforms like FloodSafeDearborn about flooding in your area to help others stay informed.</li>
+        <li><strong>Support Green Infrastructure:</strong> Advocate for rain gardens, permeable pavements, and other measures that improve stormwater management in your community.</li>
+        <li><strong>Volunteer:</strong> Join local initiatives to assist with flood preparedness and recovery efforts.</li>
+    </ul>
+
+    <h2>Additional Resources</h2>
+    <ul>
+        <li><a href="https://ready.gov/floods" target="_blank" class="button-link">Ready.gov: Flood Safety</a></li>
+        <li><a href="https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/flood.html" target="_blank" class="button-link">Red Cross: Flood Preparedness</a></li>
+        <li><a href="https://www.fema.gov/flood-maps" target="_blank" class="button-link">FEMA: Flood Maps and Safety Tips</a></li>
+        <li><a href="https://www.epa.gov/green-infrastructure" target="_blank" class="button-link">EPA: Green Infrastructure</a></li>
+    </ul>
+
+    <h2>Emergency Contacts</h2>
+    <p>If you or someone you know is in immediate danger during a flood, call <strong>911</strong>. For non-emergency flood-related assistance, contact the Wayne County Drain Commissioner or visit the <a href="{{ url_for('resources') }}">Resources</a> page for more information.</p>
+</div>
+{% endblock %}

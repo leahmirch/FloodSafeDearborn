@@ -79,7 +79,8 @@ FloodSafeDearborn/
 │   │   ├── login.html
 │   │   ├── register.html
 │   │   ├── resources.html
-│   │   └── safety_tips.html
+│   │   ├── safety_tips.html
+│   │   └── search_results.html
 │   └── static/
 │       ├── css/
 │       │   ├── index.css
@@ -105,6 +106,8 @@ FLASK_ENV=development python backend/app.py
 #### 11/15/24 
 - Leah Mirch: Converted PHP to Python / HTML / CSS
 - Leah Mirch: Worked on Index page, and styling for register / login / logout
+#### 11/16/24 
+- Leah Mirch: Added search bar, adjusted header, created content for resources, contact, about and safety tips pages
 
 ## Notes
 No notes at this time.

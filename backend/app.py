@@ -42,12 +42,13 @@ def login():
 @app.route('/home')
 def home():
     if 'user_id' not in session:
+        flash("You must be logged in to view the homepage!", "error")
         return redirect(url_for('login'))
 
     conn = get_connection()
     user = conn.execute("SELECT username FROM users WHERE id = ?", (session['user_id'],)).fetchone()
     if not user:
-        flash("User not found!")
+        flash("User not found!", "error")
         return redirect(url_for('login'))
 
     return render_template('home.html', user=user)
@@ -72,6 +73,25 @@ def contact():
 @app.route('/safety_tips')
 def safety_tips():
     return render_template('safety_tips.html')
+
+@app.route('/search')
+def search():
+    query = request.args.get('query', '').lower()
+    search_results = []
+
+    content = {
+        'Home': 'Welcome to FloodSafeDearborn. Stay informed about flooding.',
+        'Resources': 'Find emergency resources and flood preparedness tips.',
+        'Contact': 'Reach out to us for more information.',
+        'About': 'Learn about FloodSafeDearborn and our mission.',
+        'Safety Tips': 'Discover essential flood safety tips.'
+    }
+
+    for page, text in content.items():
+        if query in text.lower():
+            search_results.append(page)
+
+    return render_template('search_results.html', query=query, results=search_results)
 
 if __name__ == '__main__':
     app.run(debug=True)
