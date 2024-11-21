@@ -1,7 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
-    <h1>Welcome, {{ user['username'] }}!</h1>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <h1>Hello, {{ user['username'] }}!</h1>
 </div>
+
+<!-- Flooding Map Section -->
+<div id="map-container">
+    <h2>Flooding Map</h2>
+    <div id="map"></div>
+</div>
+
+<!-- Include Scripts for Map -->
+<script src="/js/map.js"></script>
+<script src="/js/flood-data.js"></script>
+<script src="/js/app.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClswbrRIIBOWCgoAACWEtAItQbx1Mi0RE&callback=initMap" async defer></script>
+
+<!-- Include Map-Specific CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
 {% endblock %}

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from auth import register_user, authenticate_user
 from database import get_connection
 import os
+from flask import Flask, send_from_directory
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
@@ -42,7 +43,7 @@ def login():
 @app.route('/home')
 def home():
     if 'user_id' not in session:
-        flash("You must be logged in to view the homepage!", "error")
+        flash("You must be logged in to view the flood map!", "error")
         return redirect(url_for('login'))
 
     conn = get_connection()
@@ -73,6 +74,10 @@ def contact():
 @app.route('/safety_tips')
 def safety_tips():
     return render_template('safety_tips.html')
+
+@app.route('/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory(os.path.join('..', 'backend', 'map'), filename)
 
 @app.route('/search')
 def search():

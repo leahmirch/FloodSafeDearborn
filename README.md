@@ -61,9 +61,13 @@ Ensure your project folder structure looks like this:
 ```
 FloodSafeDearborn/
 ├── backend/
+│   ├── mapp/    
+│   │   ├── app.js
+│   │   ├── flood-data.js
+│   │   └── map.js
 │   ├── app.py              
 │   ├── auth.py             
-│   ├── database.py         
+│   └── database.py         
 ├── frontend/
 │   ├── figma/    
 │   │   ├── homepage.zip
@@ -84,9 +88,10 @@ FloodSafeDearborn/
 │   └── static/
 │       ├── css/
 │       │   ├── index.css
+│       │   ├── map.css
 │       │   └── styles.css
 │       └── img/        
-├── user_db.sqlite          # SQLite database (created after setup)
+└── user_db.sqlite          # SQLite database (created after setup)
 ```
 
 #### **7. Debugging**
@@ -108,6 +113,9 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Worked on Index page, and styling for register / login / logout
 #### 11/16/24 
 - Leah Mirch: Added search bar, adjusted header, created content for resources, contact, about and safety tips pages
+#### 11/20/24 
+- Sukeina Ammar: Created interactive flood map, uploaded code
+- Leah Mirch: Integrated interactive flood map code, updated home.html and layout.html
 
 ## Notes
 No notes at this time.
