@@ -118,4 +118,12 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Integrated interactive flood map code, updated home.html and layout.html
 
 ## Notes
-No notes at this time.
+- web crawl past flood history to appear on map (with start/end dates)
+- allow for customizable user profile (prior reports that user has made, notification settings via email)
+- make a reporting event section for current water levels, flood severity, closed roads, flood reports and traffic conditions
+- flood reports will have the option of low, moderate, or high risk
+- have a duration for those current events (they will disappear from the map after a certain amount of time except for flood history)
+- allow all events to be toggled on and off from the map
+- create a statistical data section
+- create contact us, privacy policy, and terms of service footer section
+- create admin account and control panel
