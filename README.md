@@ -121,6 +121,8 @@ FLASK_ENV=development python backend/app.py
 #### 11/20/24 
 - Sukeina Ammar: Created interactive flood map, uploaded code
 - Leah Mirch: Integrated interactive flood map code, updated home.html and layout.html
+#### 12/01/24
+- Leah Mirch: Created submit_event.html for user event reporting, updated the database schema to include events and tables for each event type (water_levels, flood_severity, closed_roads, flood_reports, traffic_conditions), implemented auto-search address functionality using Mapbox Geocoder, enhanced the flood map to display event types with correct symbols and detailed descriptions in human-readable format, formatted dates as MM/DD/YYYY with a 12-hour time format, added a Dearborn boundary outline (dearborn-boundary.json), created a toggle section to filter events on the map, and updated project styling (map.css, styles.css, address.css, filter.css)
 
 ## Notes
 - web crawl past flood history (high flood risk areas as colored circles) to appear on map (with start/end dates)
