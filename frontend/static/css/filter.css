@@ -1,0 +1,56 @@
+#event-filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#event-filter-list li {
+    display: flex;
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 12px; 
+}
+
+#event-filter-list input[type="checkbox"] {
+    margin: 0; 
+    padding: 0; 
+    width: 16px; 
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px; 
+    cursor: pointer; 
+    appearance: none; 
+    display: inline-block;
+    background-color: #fff; 
+    position: relative;
+}
+
+#event-filter-list input[type="checkbox"]:checked {
+    background-color: #007bff; 
+    border-color: #0056b3;
+}
+
+#event-filter-list input[type="checkbox"]:checked::after {
+    content: "✔"; 
+    color: #fff; 
+    font-size: 12px;
+    position: absolute;
+    left: 2px;
+    top: -1px;
+}
+
+#event-filter-list img {
+    width: 20px; 
+    height: 20px;
+    object-fit: contain; 
+    margin: 0; 
+    padding: 0;
+}
+
+#event-filter-list label {
+    margin: 0; 
+    padding: 0; 
+    font-size: 16px;
+    line-height: 1; 
+    white-space: nowrap;
+}

@@ -84,14 +84,19 @@ FloodSafeDearborn/
 │   │   ├── register.html
 │   │   ├── resources.html
 │   │   ├── safety_tips.html
-│   │   └── search_results.html
+│   │   ├── search_results.html
+│   │   └── submit_event.html
 │   └── static/
 │       ├── css/
+│       │   ├── address.css
+│       │   ├── filter.css
 │       │   ├── index.css
 │       │   ├── map.css
 │       │   └── styles.css
+│       ├── data/
+│       │   └── dearborn-boundary.json
 │       └── img/        
-└── user_db.sqlite          # SQLite database (created after setup)
+└── floodsafe_db.sqlite          # SQLite database (created after setup)
 ```
 
 #### **7. Debugging**
@@ -118,12 +123,9 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Integrated interactive flood map code, updated home.html and layout.html
 
 ## Notes
-- web crawl past flood history to appear on map (with start/end dates)
+- web crawl past flood history (high flood risk areas as colored circles) to appear on map (with start/end dates)
+- access current location for event reports
 - allow for customizable user profile (prior reports that user has made, notification settings via email)
-- make a reporting event section for current water levels, flood severity, closed roads, flood reports and traffic conditions
-- flood reports will have the option of low, moderate, or high risk
-- have a duration for those current events (they will disappear from the map after a certain amount of time except for flood history)
-- allow all events to be toggled on and off from the map
 - create a statistical data section
-- create contact us, privacy policy, and terms of service footer section
+- create links to contact us, privacy policy, and terms of service in footer section
 - create admin account and control panel

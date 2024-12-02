@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h1>Submit an Event</h1>
+    <form method="POST" action="{{ url_for('submit_event') }}">
+        <!-- Event Type -->
+        <div class="form-group">
+            <label for="event_type">Select Event Type:</label>
+            <div class="custom-select-container">
+                <select id="event_type" name="event_type" class="form-control custom-select" onchange="updateFormFields(this.value)" required>
+                    <option value="">-- Select Event Type --</option>
+                    <option value="water_levels">Water Levels</option>
+                    <option value="flood_severity">Flood Severity</option>
+                    <option value="closed_roads">Closed Roads</option>
+                    <option value="flood_reports">Flood Reports</option>
+                    <option value="traffic_conditions">Traffic Conditions</option>
+                </select>
+            </div>
+        </div>
+        <p> </p>
+
+        <!-- Location Input -->
+        <div class="form-group">
+            <label for="location_option">Location:</label>
+            <select id="location_option" name="location_option" class="form-control" onchange="toggleLocationInput(this.value)" required>
+                <option value="current">Use Current Location</option>
+                <option value="address">Enter Address</option>
+            </select>
+            <div id="address-fields" style="display:none; width: 100%;">
+                <div id="geocoder" class="geocoder" style="width: 100%;"></div>
+                <input type="hidden" id="street" name="street">
+                <input type="hidden" id="city" name="city">
+                <input type="hidden" id="state" name="state">
+                <input type="hidden" id="zip" name="zip">
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+            </div>
+        </div>
+        <p> </p>
+
+        <!-- Duration Input -->
+        <div class="form-group">
+            <label for="duration">Duration (hours):</label>
+            <input type="number" id="duration" name="duration" min="1" max="24" required>
+        </div>
+        <p> </p>
+
+        <!-- Dynamic Fields -->
+        <div id="dynamic-fields"></div>
+
+        <button type="submit" class="button-link" style="margin-top: 20px;">Submit Event</button>
+    </form>
+</div>
+
+<script>
+    // Initialize Geocoder for Address Autocomplete
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGVhaG1pcmNoIiwiYSI6ImNtNDYwcDhqbjEyeHUyam9vc3N0Y3J2bncifQ.f6aq4zVYJWb3t7Ro9tDs3A';
+
+    function toggleLocationInput(option) {
+        const addressFields = document.getElementById('address-fields');
+        if (option === 'address') {
+            addressFields.style.display = 'block';
+        } else {
+            addressFields.style.display = 'none';
+        }
+    }
+
+    function initGeocoder() {
+        const geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            types: 'address',
+            placeholder: 'Start typing an address...',
+            countries: 'us'
+        });
+
+        geocoder.addTo('#geocoder');
+
+        geocoder.on('result', function (event) {
+            const place = event.result;
+            const context = place.context || [];
+
+            document.getElementById('street').value = place.text || '';
+            document.getElementById('city').value = getContext(context, 'place') || '';
+            document.getElementById('state').value = getContext(context, 'region') || '';
+            document.getElementById('zip').value = getContext(context, 'postcode') || '';
+            document.getElementById('latitude').value = place.geometry.coordinates[1] || '';
+            document.getElementById('longitude').value = place.geometry.coordinates[0] || '';
+        });
+
+        function getContext(context, type) {
+            for (let i = 0; i < context.length; i++) {
+                if (context[i].id.includes(type)) {
+                    return context[i].text;
+                }
+            }
+            return '';
+        }
+    }
+
+    // Dynamically Load Event Fields Based on Event Type
+    function updateFormFields(eventType) {
+        const fieldsContainer = document.getElementById('dynamic-fields');
+        fieldsContainer.innerHTML = ''; 
+
+        if (eventType === 'water_levels') {
+            fieldsContainer.innerHTML = `
+                <label for="level">Water Level (in inches):</label>
+                <input type="number" name="level" id="level" required>
+            `;
+        } else if (eventType === 'flood_severity') {
+            fieldsContainer.innerHTML = `
+                <label for="severity">Severity:</label>
+                <select name="severity" id="severity" required>
+                    <option value="">-- Select Severity --</option>
+                    <option value="Low">Low</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="High">High</option>
+                </select>
+            `;
+        } else if (eventType === 'closed_roads') {
+            fieldsContainer.innerHTML = `
+                <label for="road_name">Road Name:</label>
+                <input type="text" name="road_name" id="road_name" required>
+            `;
+        } else if (eventType === 'flood_reports') {
+            fieldsContainer.innerHTML = `
+                <label for="risk">Risk Level:</label>
+                <select name="risk" id="risk" required>
+                    <option value="">-- Select Risk Level --</option>
+                    <option value="Low">Low</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="High">High</option>
+                </select>
+            `;
+        } else if (eventType === 'traffic_conditions') {
+            fieldsContainer.innerHTML = `
+                <label for="traffic_level">Traffic Level:</label>
+                <select name="traffic_level" id="traffic_level" required>
+                    <option value="">-- Select Traffic Level --</option>
+                    <option value="Light">Light</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Heavy">Heavy</option>
+                </select>
+                <label for="traffic_span">Traffic Span (from-to locations):</label>
+                <input type="text" name="traffic_span" id="traffic_span" required>
+            `;
+        }
+    }
+
+    window.onload = function () {
+        initGeocoder();
+    };
+</script>
+{% endblock %}

@@ -2,12 +2,44 @@
 {% block content %}
 <div class="container">
     <h1>Hello, {{ user['username'] }}!</h1>
+    <div class="submit-event-container">
+        <a href="{{ url_for('submit_event') }}" class="button-link submit-event-button">Submit an Event</a>
+    </div>
 </div>
 
 <!-- Flooding Map Section -->
-<div id="map-container">
-    <h2>Flooding Map</h2>
-    <div id="map"></div>
+<div id="map-container" style="display: flex; flex-direction: row;">
+    <div id="map" style="flex: 4;"></div>
+    <div id="event-filter-container">
+        <h3>Filter Events</h3>
+        <ul id="event-filter-list">
+            <li>
+                <input type="checkbox" id="toggle-water-levels" checked>
+                <img src="/static/img/water-levels.png" alt="Water Levels Icon">
+                <label for="toggle-water-levels">Water Levels</label>
+            </li>
+            <li>
+                <input type="checkbox" id="toggle-flood-severity" checked>
+                <img src="/static/img/flood-severity.png" alt="Flood Severity Icon">
+                <label for="toggle-flood-severity">Flood Severity</label>
+            </li>
+            <li>
+                <input type="checkbox" id="toggle-closed-roads" checked>
+                <img src="/static/img/closed-roads.png" alt="Closed Roads Icon">
+                <label for="toggle-closed-roads">Closed Roads</label>
+            </li>
+            <li>
+                <input type="checkbox" id="toggle-flood-reports" checked>
+                <img src="/static/img/flood-report.png" alt="Flood Reports Icon">
+                <label for="toggle-flood-reports">Flood Reports</label>
+            </li>
+            <li>
+                <input type="checkbox" id="toggle-traffic-conditions" checked>
+                <img src="/static/img/traffic-conditions.png" alt="Traffic Conditions Icon">
+                <label for="toggle-traffic-conditions">Traffic Conditions</label>
+            </li>
+        </ul>                 
+    </div>    
 </div>
 
 <!-- Include Scripts for Map -->
@@ -18,4 +50,5 @@
 
 <!-- Include Map-Specific CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/filter.css') }}">
 {% endblock %}
