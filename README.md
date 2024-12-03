@@ -131,3 +131,14 @@ FLASK_ENV=development python backend/app.py
 - create a statistical data section
 - create links to contact us, privacy policy, and terms of service in footer section
 - create admin account and control panel
+
+submission requirements:
+- design 10 test cases to verify that the functionality is correctly implemented
+- complete backend implementation: functionality for user system, admin panel, listing pages with pagination, and detailed information pages
+- additional points:
+   - implement TF-IDF-based search and recommendation
+   - incorporate a caching system (either local or cloud-based) for website
+
+ - deliverables:
+    - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented
+    - time card: an excel file detailing the hours each team member has worked on specific tasks
