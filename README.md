@@ -77,15 +77,18 @@ FloodSafeDearborn/
 │   │   ├── about.html
 │   │   ├── contact.html
 │   │   ├── home.html
-│   │   ├── layout.html
 │   │   ├── index.html
 │   │   ├── layout.html
 │   │   ├── login.html
+│   │   ├── manage_account.html
+│   │   ├── notification_settings.html
 │   │   ├── register.html
 │   │   ├── resources.html
 │   │   ├── safety_tips.html
 │   │   ├── search_results.html
-│   │   └── submit_event.html
+│   │   ├── statistical_data.html
+│   │   ├── submit_event.html
+│   │   └── user_history.html
 │   └── static/
 │       ├── css/
 │       │   ├── address.css
@@ -96,7 +99,7 @@ FloodSafeDearborn/
 │       ├── data/
 │       │   └── dearborn-boundary.json
 │       └── img/        
-└── floodsafe_db.sqlite          # SQLite database (created after setup)
+└── floodsafe_db.sqlite # SQLite database (created after setup or run "python backend/database.py")
 ```
 
 #### **7. Debugging**
