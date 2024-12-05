@@ -7,10 +7,8 @@ from datetime import datetime, timedelta
 import json
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-import imghdr
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
@@ -20,6 +18,75 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/listings')
+def listings():
+    page = int(request.args.get('page', 1))
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    event_type = request.args.get('event_type', '')
+    date_filter = request.args.get('date', '')
+
+    conn = get_connection()
+    query = """
+        SELECT * FROM events WHERE 1=1
+    """
+    filters = []
+
+    if event_type:
+        query += " AND type = ?"
+        filters.append(event_type)
+
+    if date_filter:
+        query += " AND DATE(time) = ?"
+        filters.append(date_filter)
+
+    query += " ORDER BY time DESC LIMIT ? OFFSET ?"
+    filters.extend([per_page, offset])
+
+    total_query = "SELECT COUNT(*) FROM events WHERE 1=1"
+    if event_type:
+        total_query += " AND type = ?"
+    if date_filter:
+        total_query += " AND DATE(time) = ?"
+
+    total_filters = filters[:-2] 
+    events = conn.execute(query, filters).fetchall()
+    total_events = conn.execute(total_query, total_filters).fetchone()[0]
+
+    next_url = url_for('listings', page=page + 1, event_type=event_type, date=date_filter) if offset + per_page < total_events else None
+    prev_url = url_for('listings', page=page - 1, event_type=event_type, date=date_filter) if page > 1 else None
+
+    return render_template('listings.html', events=events, next_url=next_url, prev_url=prev_url)
+
+@app.route('/event/<int:event_id>')
+def event_details(event_id):
+    conn = get_connection()
+    event_query = "SELECT * FROM events WHERE id = ?"
+    additional_info_query = """
+        SELECT * FROM 
+        (
+            SELECT 'Water Levels: ' || level AS info FROM water_levels WHERE event_id = ?
+            UNION ALL
+            SELECT 'Flood Severity: ' || severity FROM flood_severity WHERE event_id = ?
+            UNION ALL
+            SELECT 'Closed Road: ' || road_name FROM closed_roads WHERE event_id = ?
+            UNION ALL
+            SELECT 'Flood Risk: ' || risk FROM flood_reports WHERE event_id = ?
+            UNION ALL
+            SELECT description AS info FROM traffic_conditions WHERE event_id = ?
+        )
+    """
+
+    event = conn.execute(event_query, (event_id,)).fetchone()
+    additional_info = conn.execute(additional_info_query, (event_id, event_id, event_id, event_id, event_id)).fetchall()
+
+    if not event:
+        flash("Event not found!", "error")
+        return redirect(url_for('listings'))
+
+    return render_template('event_details.html', event=event, additional_info=additional_info)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -47,7 +114,7 @@ def login():
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['email'] = user['email']
-            session['user_pfp'] = user.get('profile_picture', 'base-pfp.png') 
+            session['user_pfp'] = user.get('profile_picture', 'img/base-pfp.png') 
             return redirect(url_for('home'))
         else:
             flash(user, 'error')
@@ -101,7 +168,6 @@ def search():
     query = request.args.get('query', '').strip().lower()
     search_results = []
 
-    # Load page content JSON
     try:
         with open('frontend/static/data/page_content.json', 'r') as file:
             content = json.load(file)
@@ -257,52 +323,42 @@ def manage_account():
 
     if request.method == 'POST':
         new_email = request.form.get('email')
+        new_password = request.form.get('password')
+        profile_picture = request.files.get('profile_picture')
+
         if new_email and new_email != session.get('email'):
             with conn:
                 conn.execute("UPDATE users SET email = ? WHERE id = ?", (new_email, user_id))
             session['email'] = new_email
             flash("Email updated successfully!", "success")
 
-        new_password = request.form.get('password')
         if new_password:
             hashed_password = generate_password_hash(new_password)
             with conn:
                 conn.execute("UPDATE users SET password = ? WHERE id = ?", (hashed_password, user_id))
             flash("Password updated successfully!", "success")
 
-        if 'profile_picture' in request.files:
-            profile_picture = request.files['profile_picture']
-            if profile_picture and profile_picture.filename != '':
-                filename = secure_filename(profile_picture.filename)
-                file_ext = os.path.splitext(filename)[1].lower()
+        if profile_picture and profile_picture.filename:
+            filename = secure_filename(profile_picture.filename)
+            file_ext = os.path.splitext(filename)[1].lower()
 
-                if file_ext not in ['.png', '.jpg', '.jpeg']:
-                    flash("Invalid file type. Only PNG, JPG, and JPEG are allowed.", "error")
-                    return redirect(url_for('manage_account'))
-
+            if file_ext not in ['.png', '.jpg', '.jpeg']:
+                flash("Invalid file type. Only PNG, JPG, and JPEG are allowed.", "error")
+            else:
                 upload_dir = app.config['UPLOAD_FOLDER']
                 if not os.path.exists(upload_dir):
                     os.makedirs(upload_dir, exist_ok=True)
-                    print(f"Created directory: {upload_dir}")  
 
                 file_path = os.path.join(upload_dir, filename)
-                try:
-                    profile_picture.save(file_path)
-                    print(f"File saved at: {file_path}")  
-                except Exception as e:
-                    print(f"Error saving file: {e}")  
-                    flash("Error uploading the profile picture.", "error")
-                    return redirect(url_for('manage_account'))
+                profile_picture.save(file_path)
 
-                conn.execute("UPDATE users SET profile_picture = ? WHERE id = ?", (filename, user_id))
-                session['user_pfp'] = filename
+                conn.execute("UPDATE users SET profile_picture = ? WHERE id = ?", (f'uploads/{filename}', user_id))
+                session['user_pfp'] = f'uploads/{filename}'
                 flash("Profile picture updated successfully!", "success")
-
-        for message in flash_messages:
-            flash(message, "success")
 
         return redirect(url_for('manage_account'))
 
+    # Fetch current user info
     user = conn.execute("SELECT email, profile_picture FROM users WHERE id = ?", (user_id,)).fetchone()
     return render_template('manage_account.html', user=user)
 

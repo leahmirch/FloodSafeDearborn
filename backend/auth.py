@@ -8,9 +8,9 @@ def register_user(username, email, password):
     try:
         with conn:
             conn.execute("""
-                INSERT INTO users (username, email, password)
-                VALUES (?, ?, ?)
-            """, (username, email, hashed_password))
+                INSERT INTO users (username, email, password, profile_picture)
+                VALUES (?, ?, ?, ?)
+            """, (username, email, hashed_password, 'img/base-pfp.png'))
         return True, "Successfully registered!"
     except sqlite3.IntegrityError as e:
         if "username" in str(e):

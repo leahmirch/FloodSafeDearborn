@@ -76,9 +76,11 @@ FloodSafeDearborn/
 │   ├── templates/          
 │   │   ├── about.html
 │   │   ├── contact.html
+│   │   ├── evemt_details.html
 │   │   ├── home.html
 │   │   ├── index.html
 │   │   ├── layout.html
+│   │   ├── listings.html
 │   │   ├── login.html
 │   │   ├── manage_account.html
 │   │   ├── notification_settings.html
@@ -133,6 +135,7 @@ FLASK_ENV=development python backend/app.py
 #### 12/05/24
 - Leah Mirch: Created manage account page, allowing users to upate email and password. Integrated profile picture upload in "Manage Account," allowing users to upload PNG, JPG, or JPEG images, dynamically displayed in the navigation bar and fallback to base-pfp.png when unset or logged out. Updated flash message styling to apply correct CSS styles and ensured proper spacing. Fixed navigation bar profile picture behavior to update dynamically for logged-in users. Added favicon functionality using logo.png for the webpage tab. Implemented dynamic session updates for user details to reflect changes instantly
 - Leah Mirch: Implemented and optimized TF-IDF-based search functionality, allowing users to query content across multiple pages with relevance-based results. Updated search results to display detailed descriptions, improved relevance labels, and excluded irrelevant pages (e.g., the notification settings). Enhanced usability with user-friendly page names in search results and recommendations
+- Leah Mirch: Added listing pages with pagination to enable users to navigate event data efficiently (event_details.html & listings.html). Implemented fixes for user profile picture errors, ensuring new users are assigned a default image (img/base-pfp.png) during registration and allowing profile pictures to update correctly upon upload, with paths stored and displayed consistently across the application.
 
 ## Notes
 1. Web Crawl Historical Flood Data
@@ -146,15 +149,9 @@ FLASK_ENV=development python backend/app.py
 4. Admin Account and Control Panel
    - Develop an admin system with capabilities to:
      - View and manage user accounts.
-     - Monitor and approve submitted events.
-     - Perform advanced analytics and system maintenance.
+     - Monitor and edit submitted events.
 5. Contact us, privacy policy, and terms of service pages
-5. Pagination and Detailed Information Pages
-   - Implement pagination for listing pages (e.g., events, reports).
-   - Add detailed pages for each event with comprehensive data and multimedia support.
-6. Caching System
-   - Incorporate a caching system (local or cloud-based) to improve website performance and reduce server load.
-7. Additional Submission Requirements
+6. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented

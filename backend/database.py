@@ -10,6 +10,7 @@ def get_connection():
 def setup_database():
     conn = get_connection()
     with conn:
+
         # Users table
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
@@ -17,7 +18,7 @@ def setup_database():
                 username TEXT NOT NULL UNIQUE,
                 email TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
-                profile_picture TEXT DEFAULT 'base-pfp.png'
+                profile_picture TEXT DEFAULT 'img/base-pfp.png'
             )
         """)
         
@@ -39,6 +40,11 @@ def setup_database():
             )
         """)
 
+        # Index for efficient pagination on events
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_events_time ON events (time DESC)
+        """)
+        
         # Water levels table
         conn.execute("""
             CREATE TABLE IF NOT EXISTS water_levels (
@@ -89,5 +95,12 @@ def setup_database():
             )
         """)
 
-# Initialize the database
+        # Add a general metadata table for future scalability
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS metadata (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+        """)
+
 setup_database()

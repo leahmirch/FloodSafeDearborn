@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="history-title">Event Details</h1>
+    <div class="event-history">
+        <ul>
+            <li>
+                <p><strong>Type:</strong> {{ event.type | capitalize }}</p>
+                <p><strong>Location:</strong> {{ event.street }}, {{ event.city }}, {{ event.state }}, {{ event.zip }}</p>
+                <p><strong>Reported:</strong> {{ event.time }}</p>
+                <p><strong>Duration:</strong> {{ event.duration }} hour(s)</p>
+                <hr>
+            </li>
+            {% if additional_info %}
+                {% for info in additional_info %}
+                    <li>
+                        <p>{{ info['info'] }}</p>
+                        <hr>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+    <a href="{{ url_for('listings') }}" class="back-link styled-back-button">Back to Listings</a>
+</div>
+{% endblock %}

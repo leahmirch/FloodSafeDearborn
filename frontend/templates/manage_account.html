@@ -27,7 +27,11 @@
         <div class="manage-account-current-picture">
             <label>Current Profile Picture:</label>
             <p> </p>
-            <img src="{{ url_for('static', filename='uploads/' + (session.get('user_pfp') or 'base-pfp.png')) }}" alt="Current Profile Picture" class="manage-account-picture-preview">
+            <img 
+                src="{{ url_for('static', filename=session.get('user_pfp', 'img/base-pfp.png')) }}" 
+                alt="Current Profile Picture" 
+                class="manage-account-picture-preview"
+            />        
         </div>
 
         <!-- Submit Button -->

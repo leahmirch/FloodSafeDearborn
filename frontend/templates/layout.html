@@ -46,10 +46,10 @@
             <div class="user-profile">
                 {% if session.get('user_id') %}
                     <img 
-                        src="{{ url_for('static', filename='uploads/' + (session.get('user_pfp') or 'base-pfp.png')) }}" 
+                        src="{{ url_for('static', filename=session.get('user_pfp', 'img/base-pfp.png')) }}" 
                         alt="User Profile Picture" 
                         class="user-pfp"
-                    >
+                    />            
                 {% else %}
                     <img 
                         src="{{ url_for('static', filename='img/base-pfp.png') }}" 
@@ -78,9 +78,10 @@
         <nav>
             <a href="{{ url_for('statistical_data') }}" class="user-nav-link">Statistical Data</a>
             <a href="{{ url_for('notification_settings') }}" class="user-nav-link">Notification Settings</a>
-            <a href="{{ url_for('user_history') }}" class="user-nav-link">Event History</a>
+            <a href="{{ url_for('user_history') }}" class="user-nav-link">Your Event History</a>
+            <a href="{{ url_for('listings') }}" class="user-nav-link">All Event Listings</a>
             <a href="{{ url_for('manage_account') }}" class="user-nav-link">Manage Account</a>
-        </nav>
+        </nav>        
     </div>
     {% endif %}
 

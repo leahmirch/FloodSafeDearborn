@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="history-title">Event Listings</h1>
+
+    <!-- Search and Filter Section -->
+    <form class="history-search" action="{{ url_for('listings') }}" method="GET">
+        <div class="history-form-group">
+            <label for="event_type">Event Type:</label>
+            <select id="event_type" name="event_type" class="history-form-control">
+                <option value="">All</option>
+                <option value="water_levels">Water Levels</option>
+                <option value="flood_severity">Flood Severity</option>
+                <option value="closed_roads">Closed Roads</option>
+                <option value="flood_reports">Flood Reports</option>
+                <option value="traffic_conditions">Traffic Conditions</option>
+            </select>
+        </div>
+
+        <div class="history-form-group">
+            <label for="date_filter">Date:</label>
+            <input type="date" id="date_filter" name="date" class="history-form-control" value="{{ request.args.get('date', '') }}">
+        </div>
+
+        <div class="history-button-group">
+            <button type="submit" class="history-search-button">Search</button>
+        </div>
+    </form>
+
+    <!-- Event Listings -->
+    <div class="event-history">
+        {% if events %}
+            <ul>
+                {% for event in events %}
+                    <li>
+                        <p><strong>Type:</strong> {{ event.type | capitalize }}</p>
+                        <p><strong>Location:</strong> {{ event.street }}, {{ event.city }}, {{ event.state }}, {{ event.zip }}</p>
+                        <p><strong>Reported:</strong> {{ event.time }}</p>
+                        <p><strong>Duration:</strong> {{ event.duration }} hour(s)</p>
+                        <a href="{{ url_for('event_details', event_id=event.id) }}" class="details-link">View Details</a>
+                        <hr>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-reports">No events found matching your criteria.</p>
+        {% endif %}
+    </div>
+
+    <!-- Pagination Section -->
+    <div class="pagination">
+        {% if prev_url %}
+            <a href="{{ prev_url }}" class="page-link pagination-prev">Previous</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}" class="page-link pagination-next">Next</a>
+        {% endif %}
+    </div>    
+</div>
+{% endblock %}

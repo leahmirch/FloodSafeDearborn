@@ -712,3 +712,109 @@ textarea {
     display: block;
     margin: 0 auto;
 }
+
+/* Listings Styling */
+.details-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #0056b3; 
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.details-link:hover {
+    background-color: #003d80; 
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #0066cc;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+    color: #003d80;
+}
+
+.event-history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-history li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.event-history hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+/* Pagination Styling */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.page-link {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.page-link:hover {
+    background-color: #0056b3;
+}
+
+/* Specific styling for 'Next' and 'Previous' buttons */
+.pagination-prev {
+    background-color: #6c757d;
+}
+
+.pagination-prev:hover {
+    background-color: #495057;
+}
+
+.pagination-next {
+    background-color: #28a745;
+}
+
+.pagination-next:hover {
+    background-color: #218838;
+}
+
+/* Back to Listings Button Styling */
+.styled-back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #0056b3; 
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.styled-back-button:hover {
+    background-color: #003d80; 
+}
