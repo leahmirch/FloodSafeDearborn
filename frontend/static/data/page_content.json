@@ -1,0 +1,60 @@
+{
+    "home": {
+        "title": "Welcome to FloodSafeDearborn",
+        "description": "FloodSafeDearborn provides real-time flood information and resources to residents of Dearborn, Michigan. It helps residents stay informed about flood risks, emergency routes, and preparedness resources, aiming to protect homes, businesses, and communities from the dangers of flooding.",
+        "sections": {
+            "Interactive Flood Map": "View real-time flooding hotspots reported by community members.",
+            "Customizable Notifications": "Set up personalized alerts to notify you of flooding near your address.",
+            "Historical Data": "Access historical flooding data to understand flood-prone areas better.",
+            "Emergency Resources": "Find contact information for local authorities and tips for flood protection and emergency response."
+        }
+    },
+    "resources": {
+        "title": "Resources",
+        "description": "Discover critical emergency resources to help you prepare for, respond to, and recover from flooding events. Access contact details for Wayne County Drain Commissioner's Office, Michigan Department of Natural Resources, and MDOT for real-time road conditions.",
+        "contacts": {
+            "Wayne County Drain Commissioner’s Office": "Contact for drainage issues and flood-related concerns.",
+            "Michigan Department of Natural Resources": "Information about flood zones and environmental management.",
+            "MDOT": "Real-time road conditions and emergency route information."
+        },
+        "tips": [
+            "Prepare an emergency kit with essentials like water, non-perishable food, and first aid supplies.",
+            "Protect your property by elevating electrical appliances and sealing walls.",
+            "Sign up for weather alerts and notifications.",
+            "Know your evacuation routes."
+        ]
+    },
+    "contact": {
+        "title": "Contact Us",
+        "description": "Find contact details for flood-related concerns in Dearborn. Contact Dearborn City Hall or Wayne County Drain Commissioner for assistance with drainage and flood prevention projects.",
+        "contacts": {
+            "Dearborn City Hall": "16901 Michigan Ave, Dearborn, MI 48126. Phone: (313) 943-2000.",
+            "Wayne County Drain Commissioner": "Phone: (313) 224-3620."
+        }
+    },
+    "about": {
+        "title": "About FloodSafeDearborn",
+        "description": "FloodSafeDearborn is a platform aimed at providing real-time flood information and resources to residents of Dearborn, Michigan. The mission is to enhance community awareness, help with flood preparedness, and mitigate flood risks.",
+        "features": {
+            "Interactive Flood Map": "Real-time map of flooding hotspots.",
+            "Customizable Notifications": "Receive alerts about flooding incidents within your chosen radius.",
+            "Community Reporting": "Report flooding incidents to help others stay informed."
+        }
+    },
+    "safety_tips": {
+        "title": "Flood Safety Tips",
+        "description": "Learn essential tips to protect yourself, your home, and your community from flooding.",
+        "tips": {
+            "Protecting Yourself": [
+                "Monitor weather reports and flood alerts.",
+                "Prepare an emergency kit with essentials.",
+                "Evacuate early if advised by authorities."
+            ],
+            "Protecting Your Home": [
+                "Install sump pumps and waterproof your basement.",
+                "Elevate electrical appliances and clear gutters.",
+                "Use sandbags to divert water."
+            ]
+        }
+    }
+}

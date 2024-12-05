@@ -8,6 +8,9 @@ import json
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 import imghdr
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
@@ -95,22 +98,86 @@ def serve_js(filename):
 
 @app.route('/search')
 def search():
-    query = request.args.get('query', '').lower()
+    query = request.args.get('query', '').strip().lower()
     search_results = []
 
-    content = {
-        'Home': 'Welcome to FloodSafeDearborn. Stay informed about flooding.',
-        'Resources': 'Find emergency resources and flood preparedness tips.',
-        'Contact': 'Reach out to us for more information.',
-        'About': 'Learn about FloodSafeDearborn and our mission.',
-        'Safety Tips': 'Discover essential flood safety tips.'
-    }
+    # Load page content JSON
+    try:
+        with open('frontend/static/data/page_content.json', 'r') as file:
+            content = json.load(file)
+    except Exception as e:
+        print(f"Error loading JSON: {e}")
+        return render_template(
+            'search_results.html',
+            query=query,
+            results=[],
+            recommendations=[]
+        )
 
-    for page, text in content.items():
-        if query in text.lower():
-            search_results.append(page)
+    exclude_pages = ['home', 'interactive_map']  
 
-    return render_template('search_results.html', query=query, results=search_results)
+    pages = []
+    corpus = []
+
+    for page, data in content.items():
+        if page in exclude_pages:
+            continue
+
+        pages.append(page)
+        description = data.get("description", "")
+
+        if "sections" in data:
+            description += " " + " ".join(data["sections"].values())
+        if "tips" in data:
+            if isinstance(data["tips"], list):
+                description += " " + " ".join(data["tips"])
+            elif isinstance(data["tips"], dict):
+                for tips_section in data["tips"].values():
+                    description += " " + " ".join(tips_section)
+        if "contacts" in data:
+            description += " " + " ".join(data["contacts"].values())
+
+        corpus.append(description)
+
+    if not query or not corpus or all(desc.strip() == '' for desc in corpus):
+        return render_template(
+            'search_results.html',
+            query=query,
+            results=[],
+            recommendations=[]
+        )
+
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(corpus)
+    query_vector = vectorizer.transform([query])
+    similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+
+    ranked_pages = sorted(zip(pages, similarities), key=lambda x: x[1], reverse=True)
+
+    for page, score in ranked_pages:
+        if score > 0:  
+            search_results.append({
+                'page': page,
+                'relevance': "Highly Relevant" if score > 0.6 else "Relevant" if score > 0.3 else "Suggested",
+                'display_name': page.replace('_', ' ').title(), 
+                'description': content[page]['description']
+            })
+
+    recommendations = [
+        {
+            'page': page,
+            'display_name': page.replace('_', ' ').title()
+        }
+        for page, _ in ranked_pages[:3]
+        if page not in exclude_pages
+    ]
+
+    return render_template(
+        'search_results.html',
+        query=query,
+        results=search_results,
+        recommendations=recommendations
+    )
 
 @app.route('/submit_event', methods=['GET', 'POST'])
 def submit_event():

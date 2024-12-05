@@ -1,16 +1,67 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">
+<div class="content-box">
     <h1>Search Results</h1>
     <p>Showing results for "{{ query }}":</p>
-    <ul class="search-results">
-        {% if results %}
-            {% for result in results %}
-                <li><a href="{{ url_for(result.lower()) }}">{{ result }}</a></li>
+    {% if results %}
+        {% for result in results %}
+            <div class="search-result">
+                <a href="{{ url_for(result['page']) }}" class="search-result-link">
+                    <h2>{{ result['display_name'] }}</h2>
+                    <p><strong>Relevance:</strong> {{ result['relevance'] }}</p>
+                    <p><strong>Description:</strong> {{ result['description'] }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+    {% if recommendations %}
+        <h2>Recommended Pages</h2>
+        <div class="search-recommendations">
+            {% for recommendation in recommendations %}
+                <div class="recommendation-item">
+                    <a href="{{ url_for(recommendation['page']) }}" class="recommendation-link">
+                        {{ recommendation['display_name'] }}
+                    </a>
+                </div>
             {% endfor %}
-        {% else %}
-            <li>No results found.</li>
-        {% endif %}
-    </ul>
+        </div>
+    {% endif %}
 </div>
+<style>
+    .search-result {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .search-result-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .search-result-link:hover {
+        background-color: #f9f9f9;
+    }
+
+    .search-recommendations {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recommendation-item {
+        margin-bottom: 5px;
+    }
+
+    .recommendation-link {
+        text-decoration: none;
+        color: #0066cc;
+    }
+
+    .recommendation-link:hover {
+        text-decoration: underline;
+    }
+</style>
 {% endblock %}
