@@ -37,9 +37,12 @@ def login():
         success, user = authenticate_user(email, password)
         if success:
             session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['email'] = user['email']
+            session['user_pfp'] = user.get('profile_picture', 'base-pfp.png') 
             return redirect(url_for('home'))
         else:
-            flash(user) 
+            flash(user)
     return render_template('login.html')
 
 @app.route('/home')
@@ -49,10 +52,14 @@ def home():
         return redirect(url_for('login'))
 
     conn = get_connection()
-    user = conn.execute("SELECT username FROM users WHERE id = ?", (session['user_id'],)).fetchone()
+    user = conn.execute("SELECT username, email, profile_picture FROM users WHERE id = ?", (session['user_id'],)).fetchone()
     if not user:
         flash("User not found!", "error")
         return redirect(url_for('login'))
+
+    session['username'] = user['username']
+    session['email'] = user['email']
+    session['user_pfp'] = user['profile_picture']
 
     return render_template('home.html', user=user)
 
@@ -165,6 +172,34 @@ def get_events():
     """
     events = conn.execute(query).fetchall()
     return {"events": [dict(event) for event in events]}
+
+@app.route('/manage_account')
+def manage_account():
+    if 'user_id' not in session:
+        flash("You must be logged in to manage your account.", "error")
+        return redirect(url_for('login'))
+    return render_template('manage_account.html')
+
+@app.route('/notification_settings')
+def notification_settings():
+    if 'user_id' not in session:
+        flash("You must be logged in to access notification settings.", "error")
+        return redirect(url_for('login'))
+    return render_template('notification_settings.html')
+
+@app.route('/statistical_data')
+def statistical_data():
+    if 'user_id' not in session:
+        flash("You must be logged in to view statistical data.", "error")
+        return redirect(url_for('login'))
+    return render_template('statistical_data.html')
+
+@app.route('/user_history')
+def user_history():
+    if 'user_id' not in session:
+        flash("You must be logged in to view your history.", "error")
+        return redirect(url_for('login'))
+    return render_template('user_history.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

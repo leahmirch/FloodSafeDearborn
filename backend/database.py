@@ -16,7 +16,8 @@ def setup_database():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL UNIQUE,
                 email TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL
+                password TEXT NOT NULL,
+                profile_picture TEXT DEFAULT 'base-pfp.png'
             )
         """)
         
@@ -43,7 +44,7 @@ def setup_database():
             CREATE TABLE IF NOT EXISTS water_levels (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 event_id INTEGER NOT NULL,
-                level INTEGER NOT NULL, -- e.g., inches or feet
+                level INTEGER NOT NULL,
                 FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
             )
         """)

@@ -23,6 +23,7 @@
         <div class="form-group">
             <label for="location_option">Location:</label>
             <select id="location_option" name="location_option" class="form-control" onchange="toggleLocationInput(this.value)" required>
+                <option value="">-- Select Location --</option>
                 <option value="current">Use Current Location</option>
                 <option value="address">Enter Address</option>
             </select>
@@ -60,41 +61,52 @@
         const addressFields = document.getElementById('address-fields');
         if (option === 'address') {
             addressFields.style.display = 'block';
-        } else {
+        } else if (option === 'current') {
             addressFields.style.display = 'none';
+            getCurrentLocation();
         }
     }
 
-    function initGeocoder() {
-        const geocoder = new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            types: 'address',
-            placeholder: 'Start typing an address...',
-            countries: 'us'
-        });
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
 
-        geocoder.addTo('#geocoder');
+                    document.getElementById('latitude').value = latitude;
+                    document.getElementById('longitude').value = longitude;
 
-        geocoder.on('result', function (event) {
-            const place = event.result;
-            const context = place.context || [];
-
-            document.getElementById('street').value = place.text || '';
-            document.getElementById('city').value = getContext(context, 'place') || '';
-            document.getElementById('state').value = getContext(context, 'region') || '';
-            document.getElementById('zip').value = getContext(context, 'postcode') || '';
-            document.getElementById('latitude').value = place.geometry.coordinates[1] || '';
-            document.getElementById('longitude').value = place.geometry.coordinates[0] || '';
-        });
-
-        function getContext(context, type) {
-            for (let i = 0; i < context.length; i++) {
-                if (context[i].id.includes(type)) {
-                    return context[i].text;
+                    // Optionally fetch address details using latitude and longitude
+                    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${mapboxgl.accessToken}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const place = data.features[0];
+                            const context = place.context || [];
+                            document.getElementById('street').value = place.text || '';
+                            document.getElementById('city').value = getContext(context, 'place') || '';
+                            document.getElementById('state').value = getContext(context, 'region') || '';
+                            document.getElementById('zip').value = getContext(context, 'postcode') || '';
+                        })
+                        .catch(error => console.error('Error fetching address:', error));
+                },
+                function (error) {
+                    console.error('Error obtaining location:', error.message);
+                    alert('Unable to fetch current location.');
                 }
-            }
-            return '';
+            );
+        } else {
+            alert('Geolocation is not supported by this browser.');
         }
+    }
+
+    function getContext(context, type) {
+        for (let i = 0; i < context.length; i++) {
+            if (context[i].id.includes(type)) {
+                return context[i].text;
+            }
+        }
+        return '';
     }
 
     // Dynamically Load Event Fields Based on Event Type

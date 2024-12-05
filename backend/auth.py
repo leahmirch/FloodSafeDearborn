@@ -23,6 +23,11 @@ def register_user(username, email, password):
 def authenticate_user(email, password):
     conn = get_connection()
     user = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
-    if user and check_password_hash(user['password'], password):
-        return True, user
+    if user and check_password_hash(user["password"], password):
+        return True, {
+            "id": user["id"],
+            "username": user["username"],
+            "email": user["email"],
+            "profile_picture": user["profile_picture"]
+        }
     return False, "Invalid email or password."

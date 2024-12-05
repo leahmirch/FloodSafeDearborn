@@ -251,23 +251,23 @@ p {
 
 /* Success Messages */
 .flash-messages.success {
-    background-color: #d4edda;
+    background-color: #bae9c5;
     color: #155724;
-    border: 1px solid #c3e6cb;
+    border: 1px solid #bae9c5;
 }
 
 /* Error Messages */
 .flash-messages.error {
-    background-color: #f8d7da;
+    background-color: #f0b5ba;
     color: #721c24;
-    border: 1px solid #f5c6cb;
+    border: 1px solid #f0b5ba;
 }
 
 /* Info Messages */
 .flash-messages.info {
-    background-color: #cce5ff;
+    background-color: #a3c7ec;
     color: #004085;
-    border: 1px solid #b8daff;
+    border: 1px solid #a3c7ec;
 }
 
 /* Responsive Background Image */
@@ -432,4 +432,98 @@ textarea {
 
 .submit-event-button:hover {
     background-color: #cc0000; 
+}
+
+/* User Logged-In Nav Bar */
+.user-navigation-bar {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+}
+
+.user-navigation-bar nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.user-nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+}
+
+.user-nav-link:hover {
+    background-color: #003d80;
+}
+
+/* User Profile Image Section */
+/* Profile Picture and Dropdown Styling */
+.user-profile {
+    position: relative;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+/* Profile Picture Styling */
+.user-pfp {
+    width: 60px;
+    height: 60px; 
+    border-radius: 50%; 
+    border: 3px solid white; 
+    object-fit: cover; 
+    cursor: pointer; 
+}
+
+/* Dropdown Menu Styling */
+.user-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 70px; 
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    min-width: 200px; 
+    padding: 10px;
+}
+
+/* Hover Effect to Show Dropdown */
+.user-profile:hover .user-dropdown {
+    display: block;
+}
+
+/* Dropdown Divider Styling */
+.user-dropdown hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 15px 0;
+}
+
+/* Dropdown Links Styling */
+.user-dropdown a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.user-dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Dropdown Text Styling */
+.user-dropdown p {
+    margin: 0;
+    padding: 5px 0;
+    color: #333;
+    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
 }
