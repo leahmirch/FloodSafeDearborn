@@ -57,13 +57,18 @@
     // Initialize Geocoder for Address Autocomplete
     mapboxgl.accessToken = 'pk.eyJ1IjoibGVhaG1pcmNoIiwiYSI6ImNtNDYwcDhqbjEyeHUyam9vc3N0Y3J2bncifQ.f6aq4zVYJWb3t7Ro9tDs3A';
 
+    let geocoder;
+
     function toggleLocationInput(option) {
         const addressFields = document.getElementById('address-fields');
         if (option === 'address') {
             addressFields.style.display = 'block';
+            initGeocoder();
         } else if (option === 'current') {
             addressFields.style.display = 'none';
             getCurrentLocation();
+        } else {
+            addressFields.style.display = 'none';
         }
     }
 
@@ -100,6 +105,34 @@
         }
     }
 
+    function initGeocoder() {
+        const existingGeocoder = document.querySelector('.mapboxgl-ctrl-geocoder');
+        if (existingGeocoder) {
+            existingGeocoder.remove();
+        }
+
+        geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            types: 'address',
+            placeholder: 'Start typing an address...',
+            countries: 'us'
+        });
+
+        geocoder.addTo('#geocoder');
+
+        geocoder.on('result', function (event) {
+            const place = event.result;
+            const context = place.context || [];
+
+            document.getElementById('street').value = place.text || '';
+            document.getElementById('city').value = getContext(context, 'place') || '';
+            document.getElementById('state').value = getContext(context, 'region') || '';
+            document.getElementById('zip').value = getContext(context, 'postcode') || '';
+            document.getElementById('latitude').value = place.geometry.coordinates[1] || '';
+            document.getElementById('longitude').value = place.geometry.coordinates[0] || '';
+        });
+    }
+
     function getContext(context, type) {
         for (let i = 0; i < context.length; i++) {
             if (context[i].id.includes(type)) {
@@ -109,7 +142,6 @@
         return '';
     }
 
-    // Dynamically Load Event Fields Based on Event Type
     function updateFormFields(eventType) {
         const fieldsContainer = document.getElementById('dynamic-fields');
         fieldsContainer.innerHTML = ''; 

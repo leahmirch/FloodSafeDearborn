@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FloodSafeDearborn</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/address.css') }}">
-
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css"/>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClswbrRIIBOWCgoAACWEtAItQbx1Mi0RE&libraries=geometry&callback=initMap" async defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClswbrRIIBOWCgoAACWEtAItQbx1Mi0RE&libraries=places&callback=initMap" async defer></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FloodSafeDearborn</title>
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/address.css') }}">
+    
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    
+        <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css"/>
+        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClswbrRIIBOWCgoAACWEtAItQbx1Mi0RE&libraries=geometry&callback=initMap" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClswbrRIIBOWCgoAACWEtAItQbx1Mi0RE&libraries=places&callback=initMap" async defer></script>
+    </head>    
 <body>
     <!-- Header Bar -->
     <header class="header-bar">
@@ -43,11 +44,19 @@
             </div>
             <!-- User Profile Dropdown -->
             <div class="user-profile">
-                <img 
-                    src="{{ url_for('static', filename='img/' + (session.get('user_pfp') or 'base-pfp.png')) }}" 
-                    alt="User Profile Picture" 
-                    class="user-pfp"
-                >
+                {% if session.get('user_id') %}
+                    <img 
+                        src="{{ url_for('static', filename='uploads/' + (session.get('user_pfp') or 'base-pfp.png')) }}" 
+                        alt="User Profile Picture" 
+                        class="user-pfp"
+                    >
+                {% else %}
+                    <img 
+                        src="{{ url_for('static', filename='img/base-pfp.png') }}" 
+                        alt="Default Profile Picture" 
+                        class="user-pfp"
+                    >
+                {% endif %}
                 <div class="user-dropdown">
                     {% if session.get('user_id') %}
                         <p><strong>{{ session.get('username') }}</strong></p>
@@ -69,7 +78,7 @@
         <nav>
             <a href="{{ url_for('statistical_data') }}" class="user-nav-link">Statistical Data</a>
             <a href="{{ url_for('notification_settings') }}" class="user-nav-link">Notification Settings</a>
-            <a href="{{ url_for('user_history') }}" class="user-nav-link">User History</a>
+            <a href="{{ url_for('user_history') }}" class="user-nav-link">Event History</a>
             <a href="{{ url_for('manage_account') }}" class="user-nav-link">Manage Account</a>
         </nav>
     </div>
@@ -78,16 +87,17 @@
     <!-- Page Content -->
     <main class="main-content">
         <!-- Flash Messages -->
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 <div class="flash-messages">
-                    {% for message in messages %}
-                        <div class="flash-message">{{ message }}</div>
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
                 </div>
             {% endif %}
-        {% endwith %}
-        
+        {% endwith %}  
         {% block content %}{% endblock %}
     </main>
 

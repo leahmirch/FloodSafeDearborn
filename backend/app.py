@@ -5,10 +5,13 @@ import os
 from flask import Flask, send_from_directory
 from datetime import datetime, timedelta
 import json
+from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
+import imghdr
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
-UPLOAD_FOLDER = '../frontend/static/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'frontend/static/uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
@@ -24,9 +27,11 @@ def register():
         
         success, message = register_user(username, email, password)
         
-        flash(message)
         if success:
+            flash(message, 'success') 
             return redirect(url_for('login'))
+        else:
+            flash(message, 'error')
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -42,7 +47,7 @@ def login():
             session['user_pfp'] = user.get('profile_picture', 'base-pfp.png') 
             return redirect(url_for('home'))
         else:
-            flash(user)
+            flash(user, 'error')
     return render_template('login.html')
 
 @app.route('/home')
@@ -166,19 +171,73 @@ def get_events():
                    WHEN events.type = 'flood_severity' THEN (SELECT severity FROM flood_severity WHERE flood_severity.event_id = events.id)
                    WHEN events.type = 'closed_roads' THEN (SELECT road_name FROM closed_roads WHERE closed_roads.event_id = events.id)
                    WHEN events.type = 'flood_reports' THEN (SELECT risk FROM flood_reports WHERE flood_reports.event_id = events.id)
-                   WHEN events.type = 'traffic_conditions' THEN (SELECT description FROM traffic_conditions WHERE traffic_conditions.event_id = events.id)
+                   WHEN events.type = 'traffic_conditions' THEN (SELECT SUBSTR(description, INSTR(description, ':') + 2) FROM traffic_conditions WHERE traffic_conditions.event_id = events.id)
                END AS info
         FROM events
     """
     events = conn.execute(query).fetchall()
     return {"events": [dict(event) for event in events]}
 
-@app.route('/manage_account')
+@app.route('/manage_account', methods=['GET', 'POST'])
 def manage_account():
     if 'user_id' not in session:
         flash("You must be logged in to manage your account.", "error")
         return redirect(url_for('login'))
-    return render_template('manage_account.html')
+
+    conn = get_connection()
+    user_id = session['user_id']
+    flash_messages = []
+
+    if request.method == 'POST':
+        new_email = request.form.get('email')
+        if new_email and new_email != session.get('email'):
+            with conn:
+                conn.execute("UPDATE users SET email = ? WHERE id = ?", (new_email, user_id))
+            session['email'] = new_email
+            flash("Email updated successfully!", "success")
+
+        new_password = request.form.get('password')
+        if new_password:
+            hashed_password = generate_password_hash(new_password)
+            with conn:
+                conn.execute("UPDATE users SET password = ? WHERE id = ?", (hashed_password, user_id))
+            flash("Password updated successfully!", "success")
+
+        if 'profile_picture' in request.files:
+            profile_picture = request.files['profile_picture']
+            if profile_picture and profile_picture.filename != '':
+                filename = secure_filename(profile_picture.filename)
+                file_ext = os.path.splitext(filename)[1].lower()
+
+                if file_ext not in ['.png', '.jpg', '.jpeg']:
+                    flash("Invalid file type. Only PNG, JPG, and JPEG are allowed.", "error")
+                    return redirect(url_for('manage_account'))
+
+                upload_dir = app.config['UPLOAD_FOLDER']
+                if not os.path.exists(upload_dir):
+                    os.makedirs(upload_dir, exist_ok=True)
+                    print(f"Created directory: {upload_dir}")  
+
+                file_path = os.path.join(upload_dir, filename)
+                try:
+                    profile_picture.save(file_path)
+                    print(f"File saved at: {file_path}")  
+                except Exception as e:
+                    print(f"Error saving file: {e}")  
+                    flash("Error uploading the profile picture.", "error")
+                    return redirect(url_for('manage_account'))
+
+                conn.execute("UPDATE users SET profile_picture = ? WHERE id = ?", (filename, user_id))
+                session['user_pfp'] = filename
+                flash("Profile picture updated successfully!", "success")
+
+        for message in flash_messages:
+            flash(message, "success")
+
+        return redirect(url_for('manage_account'))
+
+    user = conn.execute("SELECT email, profile_picture FROM users WHERE id = ?", (user_id,)).fetchone()
+    return render_template('manage_account.html', user=user)
 
 @app.route('/notification_settings')
 def notification_settings():
@@ -194,12 +253,51 @@ def statistical_data():
         return redirect(url_for('login'))
     return render_template('statistical_data.html')
 
-@app.route('/user_history')
+@app.route('/user_history', methods=['GET', 'POST'])
 def user_history():
     if 'user_id' not in session:
         flash("You must be logged in to view your history.", "error")
         return redirect(url_for('login'))
-    return render_template('user_history.html')
+
+    conn = get_connection()
+    user_id = session['user_id']
+    
+    event_type = request.form.get('event_type', 'all')
+    date_filter = request.form.get('date', '')
+
+    query = """
+        SELECT events.type, events.street, events.city, events.state, events.zip, 
+               events.time, events.duration,
+               CASE
+                   WHEN events.type = 'water_levels' THEN water_levels.level || ' inches'
+                   WHEN events.type = 'flood_severity' THEN 'Severity: ' || flood_severity.severity
+                   WHEN events.type = 'closed_roads' THEN closed_roads.road_name
+                   WHEN events.type = 'flood_reports' THEN 'Risk: ' || flood_reports.risk
+                   WHEN events.type = 'traffic_conditions' THEN 'Details: ' || SUBSTR(traffic_conditions.description, INSTR(traffic_conditions.description, ':') + 2)
+                   ELSE 'N/A'
+               END AS info
+        FROM events
+        LEFT JOIN water_levels ON events.id = water_levels.event_id
+        LEFT JOIN flood_severity ON events.id = flood_severity.event_id
+        LEFT JOIN closed_roads ON events.id = closed_roads.event_id
+        LEFT JOIN flood_reports ON events.id = flood_reports.event_id
+        LEFT JOIN traffic_conditions ON events.id = traffic_conditions.event_id
+        WHERE events.user_id = ?
+    """
+
+    filters = [user_id]
+    if event_type != 'all':
+        query += " AND events.type = ?"
+        filters.append(event_type)
+    if date_filter:
+        query += " AND DATE(events.time) = ?"
+        filters.append(date_filter)
+
+    query += " ORDER BY events.time DESC"
+
+    reports = conn.execute(query, tuple(filters)).fetchall()
+
+    return render_template('user_history.html', reports=reports)
 
 if __name__ == '__main__':
     app.run(debug=True)

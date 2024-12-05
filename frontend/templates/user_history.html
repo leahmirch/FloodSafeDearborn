@@ -1,7 +1,45 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
-    <h1>User History</h1>
-    <p>View the events you have reported or interacted with.</p>
+    <h1 class="history-title">Your Report History</h1>
+    <form method="POST" action="{{ url_for('user_history') }}" class="history-search">
+        <div class="history-form-group">
+            <label for="event_type">Filter by Event Type:</label>
+            <select id="event_type" name="event_type" class="history-form-control">
+                <option value="all">All</option>
+                <option value="water_levels">Water Levels</option>
+                <option value="flood_severity">Flood Severity</option>
+                <option value="closed_roads">Closed Roads</option>
+                <option value="flood_reports">Flood Reports</option>
+                <option value="traffic_conditions">Traffic Conditions</option>
+            </select>
+        </div>
+        <div class="history-form-group">
+            <label for="date">Filter by Date:</label>
+            <input type="date" id="date" name="date" class="history-form-control">
+        </div>
+        <div class="history-button-group">
+            <button type="submit" class="history-search-button">Search</button>
+        </div>
+    </form>
+
+    <div class="event-history">
+        {% if reports %}
+            <ul>
+                {% for report in reports %}
+                    <li>
+                        <p><strong>Type:</strong> {{ report['type'].replace('_', ' ').title() }}</p>
+                        <p><strong>Address:</strong> {{ report['street'] }}, {{ report['city'] }}, {{ report['state'] }}, {{ report['zip'] }}</p>
+                        <p><strong>Date:</strong> {{ report['time'] }}</p>
+                        <p><strong>Info:</strong> {{ report['info'] }}</p>
+                        <p><strong>Duration:</strong> {{ report['duration'] }} hour(s)</p>
+                        <hr>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-reports">No reports to display.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

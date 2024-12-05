@@ -98,6 +98,7 @@ FloodSafeDearborn/
 │       │   └── styles.css
 │       ├── data/
 │       │   └── dearborn-boundary.json
+│       ├── uploads/
 │       └── img/        
 └── floodsafe_db.sqlite # SQLite database (created after setup or run "python backend/database.py")
 ```
@@ -128,10 +129,12 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Created submit_event.html for user event reporting, updated the database schema to include events and tables for each event type (water_levels, flood_severity, closed_roads, flood_reports, traffic_conditions), implemented auto-search address functionality using Mapbox Geocoder, enhanced the flood map to display event types with correct symbols and detailed descriptions in human-readable format, formatted dates as MM/DD/YYYY with a 12-hour time format, added a Dearborn boundary outline (dearborn-boundary.json), created a toggle section to filter events on the map, and updated project styling (map.css, styles.css, address.css, filter.css)
 #### 12/04/24
 - Leah Mirch: Added access to user's current location for event reporting, and updated main layout navigation bar to have more interactive user profile / login / registration, and added new navigation bar for when a user is logged in for pages: manage account, notification settings, statistical data, and user history
+#### 12/05/24
+- Leah Mirch: Created manage account page, allowing users to upate email and password. Integrated profile picture upload in "Manage Account," allowing users to upload PNG, JPG, or JPEG images, dynamically displayed in the navigation bar and fallback to base-pfp.png when unset or logged out. Updated flash message styling to apply correct CSS styles and ensured proper spacing. Fixed navigation bar profile picture behavior to update dynamically for logged-in users. Added favicon functionality using logo.png for the webpage tab. Implemented dynamic session updates for user details to reflect changes instantly
 
 ## Notes
 - web crawl past flood history (high flood risk areas as colored circles) to appear on map (with start/end dates)
-- allow for customizable user profile (prior reports that user has made, notification settings via email)
+- allow notification settings via email
 - create a statistical data section
 - create links to contact us, privacy policy, and terms of service in footer section
 - create admin account and control panel

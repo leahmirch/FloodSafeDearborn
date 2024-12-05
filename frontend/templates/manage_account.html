@@ -1,7 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">
-    <h1>Manage Account</h1>
-    <p>Here you can update your account details or change your password.</p>
+<div class="manage-account-container">
+    <h1 class="manage-account-title">Manage Account</h1>
+    <p class="manage-account-description">Update your account details below:</p>
+
+    <form method="POST" action="{{ url_for('manage_account') }}" enctype="multipart/form-data">
+        <!-- Update Email -->
+        <div class="manage-account-form-group">
+            <label for="email">Update Email:</label>
+            <input type="email" id="email" name="email" class="manage-account-form-control" placeholder="Enter new email" value="{{ session.get('email') }}">
+        </div>
+        
+        <!-- Update Password -->
+        <div class="manage-account-form-group">
+            <label for="password">Update Password:</label>
+            <input type="password" id="password" name="password" class="manage-account-form-control" placeholder="Enter new password">
+        </div>
+
+        <!-- Upload Profile Picture -->
+        <div class="manage-account-form-group">
+            <label for="profile_picture">Upload New Profile Picture:</label>
+            <input type="file" id="profile_picture" name="profile_picture" class="manage-account-file-input">
+        </div>
+
+        <!-- Display Current Profile Picture -->
+        <div class="manage-account-current-picture">
+            <label>Current Profile Picture:</label>
+            <p> </p>
+            <img src="{{ url_for('static', filename='uploads/' + (session.get('user_pfp') or 'base-pfp.png')) }}" alt="Current Profile Picture" class="manage-account-picture-preview">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="manage-account-button">Update Account</button>
+    </form>
 </div>
 {% endblock %}

@@ -144,7 +144,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 45px;
+    height: 30px;
 }
 
 .nav-link:hover {
@@ -243,28 +243,30 @@ p {
     justify-content: center;
     align-items: center; 
     height: auto;
+    margin-bottom: 15px; 
 }
 
 .flash-message {
     font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 5px; 
 }
 
-/* Success Messages */
-.flash-messages.success {
+.flash-message.success {
     background-color: #bae9c5;
     color: #155724;
     border: 1px solid #bae9c5;
 }
 
-/* Error Messages */
-.flash-messages.error {
+.flash-message.error {
     background-color: #f0b5ba;
     color: #721c24;
     border: 1px solid #f0b5ba;
 }
 
-/* Info Messages */
-.flash-messages.info {
+.flash-message.info {
     background-color: #a3c7ec;
     color: #004085;
     border: 1px solid #a3c7ec;
@@ -526,4 +528,187 @@ textarea {
     font-size: 14px;
     text-align: left;
     font-weight: bold;
+}
+
+/* User History Page */
+.history-title {
+    text-align: center;
+    font-size: 24px;
+    color: #0056b3;
+    margin-bottom: 20px;
+}
+
+.history-search {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.history-form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.history-form-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.history-form-control {
+    width: 200px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.history-button-group {
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-search-button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: fit-content; 
+}
+
+.history-search-button:hover {
+    background-color: #003d80;
+}
+
+/* Event History */
+.event-history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-history li {
+    margin-bottom: 5px;
+    line-height: 0.5;
+}
+
+.event-history hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 5px 0;
+}
+
+.no-reports {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* Manage Account Page Styles */
+.manage-account-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.manage-account-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0056b3;
+    margin-bottom: 15px;
+}
+
+.manage-account-description {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.manage-account-form-group {
+    margin-bottom: 20px;
+}
+
+.manage-account-form-control {
+    width: 95%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.manage-account-file-input {
+    width: 95%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.manage-account-current-picture {
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.manage-account-picture-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.manage-account-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.manage-account-button:hover {
+    background-color: #0056b3;
+}
+
+/* Current Profile Picture Section */
+.current-profile-picture {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+/* Profile Picture Display for Manage Account */
+.profile-picture-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
 }
