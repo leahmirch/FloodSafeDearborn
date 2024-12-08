@@ -85,6 +85,17 @@
     </div>
     {% endif %}
 
+    <!-- Admin Navigation Bar -->
+    {% if session.get('user_id') and session.get('admin') == 1 %}
+    <div class="admin-navigation-bar">
+        <p class="admin-actions-title">Admin Actions:</p>
+        <nav>
+            <a href="{{ url_for('admin_manage_users') }}" class="admin-nav-link">Manage User Accounts</a>
+            <a href="{{ url_for('admin_manage_events') }}" class="admin-nav-link">Monitor & Edit Events</a>
+        </nav>
+    </div>
+    {% endif %}
+    
     <!-- Page Content -->
     <main class="main-content">
         <!-- Flash Messages -->

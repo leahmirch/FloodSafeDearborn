@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="admin-manage-users-container">
+    <h1 class="admin-manage-title">Manage User Accounts</h1>
+
+    <!-- User Table -->
+    <table class="admin-user-edit-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Admin Status</th>
+                <th>Profile Picture</th>
+                <th>Password & Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <!-- Centered User ID -->
+                <td><p class="center-text">{{ user['id'] }}</p></td>
+
+                <!-- Username with Update Option -->
+                <td>
+                    <p>{{ user['username'] }}</p>
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <input type="text" name="new_username" placeholder="Update Username" class="action-field">
+                        <button type="submit" name="update" class="admin-user-edit-btn-update">Update</button>
+                    </form>
+                </td>
+
+                <!-- Email with Update Option -->
+                <td>
+                    <p>{{ user['email'] }}</p>
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <input type="text" name="new_email" placeholder="Update Email" class="action-field">
+                        <button type="submit" name="update" class="admin-user-edit-btn-update">Update</button>
+                    </form>
+                </td>
+
+                <!-- Admin Status -->
+                <td>
+                    <p class="admin-status-text">
+                        {{ 'Admin User' if user['admin'] == 1 else 'Regular User' }}
+                    </p>
+                    {% if not user['admin'] %}
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <button type="submit" name="promote" class="admin-user-edit-btn-promote">Promote to Admin</button>
+                    </form>
+                    {% endif %}
+                </td>
+
+                <!-- Profile Picture -->
+                <td>
+                    <img src="{{ url_for('static', filename=user['profile_picture']) }}" alt="Profile Picture" class="admin-user-edit-pfp">
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <button type="submit" name="reset_pfp" class="admin-user-edit-btn-reset">Reset Picture</button>
+                    </form>
+                </td>
+
+                <!-- Password & Delete Section -->
+                <td>
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <input type="password" name="new_password" placeholder="Update Password" class="action-field">
+                        <p> </p>
+                        <button type="submit" name="update" class="admin-user-edit-btn-update">Update Password</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin_manage_users') }}">
+                        <input type="hidden" name="user_id" value="{{ user['id'] }}">
+                        <button type="submit" name="delete" class="admin-user-edit-btn-delete">Delete Account</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+        {% if prev_url %}
+            <a href="{{ prev_url }}" class="pagination-btn">Previous</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}" class="pagination-btn">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -115,6 +115,7 @@ def login():
             session['username'] = user['username']
             session['email'] = user['email']
             session['user_pfp'] = user.get('profile_picture', 'img/base-pfp.png') 
+            session['admin'] = user.get('admin', 0)
             return redirect(url_for('home'))
         else:
             flash(user, 'error')
@@ -421,6 +422,159 @@ def user_history():
     reports = conn.execute(query, tuple(filters)).fetchall()
 
     return render_template('user_history.html', reports=reports)
+
+@app.route('/admin/manage_users', methods=['GET', 'POST'])
+def admin_manage_users():
+    if not session.get('admin') == 1:
+        flash("Access denied: Admins only!", "error")
+        return redirect(url_for('home'))
+
+    conn = get_connection()
+
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+
+        if 'update' in request.form:
+            new_username = request.form.get('new_username')
+            new_password = request.form.get('new_password')
+            if new_username:
+                conn.execute("UPDATE users SET username = ? WHERE id = ?", (new_username, user_id))
+            if new_password:
+                hashed_password = generate_password_hash(new_password)
+                conn.execute("UPDATE users SET password = ? WHERE id = ?", (hashed_password, user_id))
+            flash("User updated successfully!", "success")
+
+        elif 'promote' in request.form:
+            conn.execute("UPDATE users SET admin = 1 WHERE id = ?", (user_id,))
+            flash("User promoted to admin successfully!", "success")
+
+        elif 'delete' in request.form:
+            conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
+            flash("User deleted successfully!", "success")
+
+        conn.commit()
+        return redirect(url_for('admin_manage_users'))
+
+    page = int(request.args.get('page', 1))
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    users = conn.execute("SELECT id, username, email, password, profile_picture, admin FROM users LIMIT ? OFFSET ?", 
+                         (per_page, offset)).fetchall()
+    total_users = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+
+    next_url = url_for('admin_manage_users', page=page + 1) if offset + per_page < total_users else None
+    prev_url = url_for('admin_manage_users', page=page - 1) if page > 1 else None
+
+    return render_template('admin_manage_users.html', users=users, next_url=next_url, prev_url=prev_url)
+
+@app.route('/admin/manage_events', methods=['GET', 'POST'])
+def admin_manage_events():
+    if not session.get('admin') == 1:
+        flash("Access denied: Admins only!", "error")
+        return redirect(url_for('home'))
+
+    conn = get_connection()
+
+    if request.method == 'POST':
+        event_id = request.form.get('event_id')
+
+        if 'update_address' in request.form:
+            new_street = request.form.get('street')
+            new_city = request.form.get('city')
+            new_state = request.form.get('state')
+            new_zip = request.form.get('zip')
+
+            conn.execute("""
+                UPDATE events
+                SET street = ?, city = ?, state = ?, zip = ?
+                WHERE id = ?
+            """, (new_street, new_city, new_state, new_zip, event_id))
+            flash("Address updated successfully!", "success")
+
+        elif 'update_duration' in request.form:
+            new_duration = request.form.get('duration')
+            conn.execute("""
+                UPDATE events
+                SET duration = ?
+                WHERE id = ?
+            """, (new_duration, event_id))
+            flash("Duration updated successfully!", "success")
+
+        elif 'update_time' in request.form:
+            new_time = request.form.get('time')
+            conn.execute("""
+                UPDATE events
+                SET time = ?
+                WHERE id = ?
+            """, (new_time, event_id))
+            flash("Date/Time updated successfully!", "success")
+
+        elif 'update_details' in request.form:
+            event_type = conn.execute("SELECT type FROM events WHERE id = ?", (event_id,)).fetchone()[0]
+            new_details = request.form.get('details')
+
+            if event_type == 'water_levels':
+                conn.execute("UPDATE water_levels SET level = ? WHERE event_id = ?", (new_details, event_id))
+            elif event_type == 'flood_severity':
+                conn.execute("UPDATE flood_severity SET severity = ? WHERE event_id = ?", (new_details, event_id))
+            elif event_type == 'closed_roads':
+                conn.execute("UPDATE closed_roads SET road_name = ? WHERE event_id = ?", (new_details, event_id))
+            elif event_type == 'flood_reports':
+                conn.execute("UPDATE flood_reports SET risk = ? WHERE event_id = ?", (new_details, event_id))
+            elif event_type == 'traffic_conditions':
+                conn.execute("UPDATE traffic_conditions SET description = ? WHERE event_id = ?", (new_details, event_id))
+
+            flash("Details updated successfully!", "success")
+
+        elif 'delete' in request.form:
+            conn.execute("DELETE FROM events WHERE id = ?", (event_id,))
+            flash("Event deleted successfully!", "success")
+
+        conn.commit()
+        return redirect(url_for('admin_manage_events'))
+
+    page = int(request.args.get('page', 1))
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    events = conn.execute("""
+        SELECT events.id, events.type, events.street, events.city, events.state, events.zip,
+               events.time, events.duration, users.username AS submitted_by,
+               CASE 
+                   WHEN events.type = 'water_levels' THEN water_levels.level || ' inches'
+                   WHEN events.type = 'flood_severity' THEN 'Severity: ' || flood_severity.severity
+                   WHEN events.type = 'closed_roads' THEN closed_roads.road_name
+                   WHEN events.type = 'flood_reports' THEN 'Risk: ' || flood_reports.risk
+                   WHEN events.type = 'traffic_conditions' THEN traffic_conditions.description
+                   ELSE 'N/A'
+               END AS details
+        FROM events
+        LEFT JOIN users ON events.user_id = users.id
+        LEFT JOIN water_levels ON events.id = water_levels.event_id
+        LEFT JOIN flood_severity ON events.id = flood_severity.event_id
+        LEFT JOIN closed_roads ON events.id = closed_roads.event_id
+        LEFT JOIN flood_reports ON events.id = flood_reports.event_id
+        LEFT JOIN traffic_conditions ON events.id = traffic_conditions.event_id
+        LIMIT ? OFFSET ?
+    """, (per_page, offset)).fetchall()
+
+    parsed_events = []
+    for event in events:
+        event = dict(event)
+        if event['time']:
+            try:
+                event['time'] = datetime.strptime(event['time'], '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                event['time'] = None
+        parsed_events.append(event)
+
+    total_events = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+
+    next_url = url_for('admin_manage_events', page=page + 1) if offset + per_page < total_events else None
+    prev_url = url_for('admin_manage_events', page=page - 1) if page > 1 else None
+
+    return render_template('admin_manage_events.html', events=parsed_events, next_url=next_url, prev_url=prev_url)
 
 if __name__ == '__main__':
     app.run(debug=True)

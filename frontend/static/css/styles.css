@@ -818,3 +818,170 @@ textarea {
 .styled-back-button:hover {
     background-color: #003d80; 
 }
+
+/* Admin Navigation Bar */
+.admin-actions-title {
+    color: #fff;
+    font-weight: bold;
+}
+
+.admin-navigation-bar {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+.admin-navigation-bar nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.admin-nav-link {
+    color: #fff;
+    background-color: #007bff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.admin-nav-link:hover {
+    background-color: #0056b3;
+}
+
+/* Admin Table Styling */
+.admin-user-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+}
+
+.admin-user-edit-table th,
+.admin-user-edit-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Table Header */
+.admin-user-edit-table th {
+    background-color: #007bff;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Wrapper for editable fields and buttons */
+.table-cell-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 5px;
+}
+
+/* Center Text for Non-Editable Cells */
+.center-text {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Buttons */
+.admin-user-edit-btn {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.admin-user-edit-btn-update {
+    background-color: #28a745;
+    color: white;
+}
+
+.admin-user-edit-btn-update:hover {
+    background-color: #218838;
+}
+
+.admin-user-edit-btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.admin-user-edit-btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Input Fields */
+.action-field {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Location Input Group */
+.location-input-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Profile Picture */
+.admin-user-edit-pfp {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    margin: 10px auto;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .admin-user-edit-table {
+        font-size: 0.8em;
+    }
+
+    .admin-user-edit-btn,
+    .action-field {
+        width: 100%;
+    }
+
+    .location-input-group {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

@@ -1,4 +1,5 @@
 import sqlite3
+from werkzeug.security import generate_password_hash
 
 DB_FILE = 'floodsafe_db.sqlite'
 
@@ -18,7 +19,8 @@ def setup_database():
                 username TEXT NOT NULL UNIQUE,
                 email TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
-                profile_picture TEXT DEFAULT 'img/base-pfp.png'
+                profile_picture TEXT DEFAULT 'img/base-pfp.png',
+                admin INTEGER DEFAULT 0 CHECK(admin IN (0, 1))
             )
         """)
         
@@ -102,5 +104,18 @@ def setup_database():
                 value TEXT
             )
         """)
+
+        # Insert default admin user
+        admin_username = "admin"
+        admin_email = "admin@floodsafe.com"
+        admin_password = generate_password_hash("admin123")
+        admin_check = conn.execute("SELECT * FROM users WHERE username = ?", (admin_username,)).fetchone()
+
+        if not admin_check:
+            conn.execute("""
+                INSERT INTO users (username, email, password, profile_picture, admin)
+                VALUES (?, ?, ?, ?, ?)
+            """, (admin_username, admin_email, admin_password, 'img/base-pfp.png', 1))
+            print("Admin user successfully created.")
 
 setup_database()

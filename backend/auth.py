@@ -28,6 +28,7 @@ def authenticate_user(email, password):
             "id": user["id"],
             "username": user["username"],
             "email": user["email"],
-            "profile_picture": user["profile_picture"]
+            "profile_picture": user["profile_picture"],
+            "admin": user["admin"]
         }
     return False, "Invalid email or password."

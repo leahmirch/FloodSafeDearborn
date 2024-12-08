@@ -75,6 +75,8 @@ FloodSafeDearborn/
 │   │   └── user_dashboard.zip
 │   ├── templates/          
 │   │   ├── about.html
+│   │   ├── admin_manage_events.html
+│   │   ├── admin_manage_users.html
 │   │   ├── contact.html
 │   │   ├── evemt_details.html
 │   │   ├── home.html
@@ -135,7 +137,9 @@ FLASK_ENV=development python backend/app.py
 #### 12/05/24
 - Leah Mirch: Created manage account page, allowing users to upate email and password. Integrated profile picture upload in "Manage Account," allowing users to upload PNG, JPG, or JPEG images, dynamically displayed in the navigation bar and fallback to base-pfp.png when unset or logged out. Updated flash message styling to apply correct CSS styles and ensured proper spacing. Fixed navigation bar profile picture behavior to update dynamically for logged-in users. Added favicon functionality using logo.png for the webpage tab. Implemented dynamic session updates for user details to reflect changes instantly
 - Leah Mirch: Implemented and optimized TF-IDF-based search functionality, allowing users to query content across multiple pages with relevance-based results. Updated search results to display detailed descriptions, improved relevance labels, and excluded irrelevant pages (e.g., the notification settings). Enhanced usability with user-friendly page names in search results and recommendations
-- Leah Mirch: Added listing pages with pagination to enable users to navigate event data efficiently (event_details.html & listings.html). Implemented fixes for user profile picture errors, ensuring new users are assigned a default image (img/base-pfp.png) during registration and allowing profile pictures to update correctly upon upload, with paths stored and displayed consistently across the application.
+- Leah Mirch: Added listing pages with pagination to enable users to navigate event data efficiently (event_details.html & listings.html). Implemented fixes for user profile picture errors, ensuring new users are assigned a default image (img/base-pfp.png) during registration and allowing profile pictures to update correctly upon upload, with paths stored and displayed consistently across the application
+#### 12/08/24
+- Leah Mirch: Added admin controls to manage events and manage users. Admins can now edit event details, including address, duration, date/time, and specific details based on the event type, ensuring accuracy across all records. Additionally, admins have the ability to delete events. Admins can edit user's details like change their email, username, password, and reset their profile picture if needed. The admin can also promote a user to an admin role. Additionally, admins can delete user's accounts
 
 ## Notes
 1. Web Crawl Historical Flood Data
@@ -146,12 +150,8 @@ FLASK_ENV=development python backend/app.py
 3. Statistical Data Section
    - Create a section to display historical flooding trends and data.
    - Include high-risk areas and data visualizations.
-4. Admin Account and Control Panel
-   - Develop an admin system with capabilities to:
-     - View and manage user accounts.
-     - Monitor and edit submitted events.
-5. Contact us, privacy policy, and terms of service pages
-6. Additional Submission Requirements
+4. Contact us, privacy policy, and terms of service pages
+5. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented

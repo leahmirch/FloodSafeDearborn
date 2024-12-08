@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="admin-manage-users-container">
+    <h1 class="admin-manage-title">Manage Events</h1>
+
+    <!-- Event Table -->
+    <table class="admin-user-edit-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event Type</th>
+                <th>Location</th>
+                <th>Duration</th>
+                <th>Date/Time</th>
+                <th>Details</th>
+                <th>Submitted By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <!-- Event ID -->
+                <td class="center-text">{{ event['id'] }}</td>
+
+                <!-- Event Type -->
+                <td class="center-text">{{ event['type'].replace('_', ' ').title() }}</td>
+
+                <!-- Location Fields -->
+                <td>
+                    <div class="table-cell-wrapper">
+                        <p>{{ event['street'] }}, {{ event['city'] }}, {{ event['state'] }} {{ event['zip'] }}</p>
+                        <form method="POST">
+                            <input type="hidden" name="event_id" value="{{ event['id'] }}">
+                            <input type="text" name="street" placeholder="Street" class="action-field">
+                            <div class="location-input-group">
+                                <input type="text" name="city" placeholder="City" class="action-field">
+                                <input type="text" name="state" placeholder="State" class="action-field">
+                                <input type="text" name="zip" placeholder="Zip" class="action-field">
+                            </div>
+                            <button type="submit" name="update_address" class="admin-user-edit-btn-update">Update</button>
+                        </form>
+                    </div>
+                </td>
+
+                <!-- Duration Field -->
+                <td>
+                    <div class="table-cell-wrapper">
+                        <p>{{ event['duration'] }} hours</p>
+                        <form method="POST">
+                            <input type="hidden" name="event_id" value="{{ event['id'] }}">
+                            <input type="number" name="duration" placeholder="Duration" min="1" max="24" class="action-field">
+                            <button type="submit" name="update_duration" class="admin-user-edit-btn-update">Update</button>
+                        </form>
+                    </div>
+                </td>
+
+                <!-- Date/Time Field -->
+                <td>
+                    <div class="table-cell-wrapper">
+                        <p>{{ event['time'].strftime('%Y-%m-%d %H:%M') if event['time'] else '' }}</p>
+                        <form method="POST">
+                            <input type="hidden" name="event_id" value="{{ event['id'] }}">
+                            <input type="datetime-local" name="time" class="action-field">
+                            <button type="submit" name="update_time" class="admin-user-edit-btn-update">Update</button>
+                        </form>
+                    </div>
+                </td>
+
+                <!-- Details Field -->
+                <td>
+                    <div class="table-cell-wrapper">
+                        <p>{{ event['details'] }}</p>
+                        <form method="POST">
+                            <input type="hidden" name="event_id" value="{{ event['id'] }}">
+                            <input type="text" name="details" placeholder="Details" class="action-field">
+                            <button type="submit" name="update_details" class="admin-user-edit-btn-update">Update</button>
+                        </form>
+                    </div>
+                </td>
+
+                <!-- Submitted By -->
+                <td class="center-text">{{ event['submitted_by'] }}</td>
+
+                <!-- Delete Event -->
+                <td>
+                    <form method="POST">
+                        <input type="hidden" name="event_id" value="{{ event['id'] }}">
+                        <button type="submit" name="delete" class="admin-user-edit-btn-delete">Delete Event</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if prev_url %}
+        <a href="{{ prev_url }}" class="pagination-btn pagination-prev">Previous</a>
+        {% endif %}
+        {% if next_url %}
+        <a href="{{ next_url }}" class="pagination-btn pagination-next">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
