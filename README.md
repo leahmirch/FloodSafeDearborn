@@ -140,6 +140,7 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Added listing pages with pagination to enable users to navigate event data efficiently (event_details.html & listings.html). Implemented fixes for user profile picture errors, ensuring new users are assigned a default image (img/base-pfp.png) during registration and allowing profile pictures to update correctly upon upload, with paths stored and displayed consistently across the application
 #### 12/08/24
 - Leah Mirch: Added admin controls to manage events and manage users. Admins can now edit event details, including address, duration, date/time, and specific details based on the event type, ensuring accuracy across all records. Additionally, admins have the ability to delete events. Admins can edit user's details like change their email, username, password, and reset their profile picture if needed. The admin can also promote a user to an admin role. Additionally, admins can delete user's accounts
+- Leah Mirch: Added contact, privacy policy and terms of service links
 
 ## Notes
 1. Web Crawl Historical Flood Data
@@ -150,8 +151,7 @@ FLASK_ENV=development python backend/app.py
 3. Statistical Data Section
    - Create a section to display historical flooding trends and data.
    - Include high-risk areas and data visualizations.
-4. Contact us, privacy policy, and terms of service pages
-5. Additional Submission Requirements
+4. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented
