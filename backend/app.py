@@ -298,16 +298,45 @@ def submit_event():
 def get_events():
     conn = get_connection()
     query = """
-        SELECT events.type, events.latitude, events.longitude, events.street, events.city, events.state, events.zip, 
-               events.time, events.duration,
-               CASE
-                   WHEN events.type = 'water_levels' THEN (SELECT level FROM water_levels WHERE water_levels.event_id = events.id)
-                   WHEN events.type = 'flood_severity' THEN (SELECT severity FROM flood_severity WHERE flood_severity.event_id = events.id)
-                   WHEN events.type = 'closed_roads' THEN (SELECT road_name FROM closed_roads WHERE closed_roads.event_id = events.id)
-                   WHEN events.type = 'flood_reports' THEN (SELECT risk FROM flood_reports WHERE flood_reports.event_id = events.id)
-                   WHEN events.type = 'traffic_conditions' THEN (SELECT SUBSTR(description, INSTR(description, ':') + 2) FROM traffic_conditions WHERE traffic_conditions.event_id = events.id)
-               END AS info
+        SELECT 
+            'flood_history' AS type, 
+            latitude, 
+            longitude, 
+            NULL AS street, 
+            NULL AS city, 
+            NULL AS state, 
+            NULL AS zip, 
+            date AS time,
+            0 AS duration,
+            title AS info
+        FROM flood_history
+
+        UNION ALL
+
+        SELECT 
+            events.type, 
+            events.latitude, 
+            events.longitude, 
+            events.street, 
+            events.city, 
+            events.state, 
+            events.zip, 
+            events.time, 
+            events.duration,
+            CASE
+                WHEN events.type = 'water_levels' THEN 'Water Level: ' || level || ' inches'
+                WHEN events.type = 'flood_severity' THEN 'Severity: ' || severity
+                WHEN events.type = 'closed_roads' THEN 'Road Closed: ' || road_name
+                WHEN events.type = 'flood_reports' THEN 'Flood Risk: ' || risk
+                WHEN events.type = 'traffic_conditions' THEN description
+                ELSE 'N/A'
+            END AS info
         FROM events
+        LEFT JOIN water_levels ON events.id = water_levels.event_id
+        LEFT JOIN flood_severity ON events.id = flood_severity.event_id
+        LEFT JOIN closed_roads ON events.id = closed_roads.event_id
+        LEFT JOIN flood_reports ON events.id = flood_reports.event_id
+        LEFT JOIN traffic_conditions ON events.id = traffic_conditions.event_id
     """
     events = conn.execute(query).fetchall()
     return {"events": [dict(event) for event in events]}

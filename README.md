@@ -141,17 +141,15 @@ FLASK_ENV=development python backend/app.py
 #### 12/08/24
 - Leah Mirch: Added admin controls to manage events and manage users. Admins can now edit event details, including address, duration, date/time, and specific details based on the event type, ensuring accuracy across all records. Additionally, admins have the ability to delete events. Admins can edit user's details like change their email, username, password, and reset their profile picture if needed. The admin can also promote a user to an admin role. Additionally, admins can delete user's accounts
 - Leah Mirch: Added contact, privacy policy and terms of service links
+- Leah Mirch: Added historic flood events onto the map with location and dates. Also added the option to toggle them on and off like other events
 
 ## Notes
-1. Web Crawl Historical Flood Data
-   - Crawl past flood history to identify high flood-risk areas.
-   - Display historical flood zones as colored circles on the map, with associated start/end dates.
-2. Notification Settings
+1. Notification Settings
    - Allow users to configure personalized flood notifications via email.
-3. Statistical Data Section
+2. Statistical Data Section
    - Create a section to display historical flooding trends and data.
    - Include high-risk areas and data visualizations.
-4. Additional Submission Requirements
+3. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented

@@ -105,6 +105,18 @@ def setup_database():
             )
         """)
 
+        # Flood history table
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS flood_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                date TEXT NOT NULL,
+                latitude REAL,
+                longitude REAL,
+                location TEXT NOT NULL
+            )
+        """)
+
         # Insert default admin user
         admin_username = "admin"
         admin_email = "admin@floodsafe.com"
@@ -117,5 +129,26 @@ def setup_database():
                 VALUES (?, ?, ?, ?, ?)
             """, (admin_username, admin_email, admin_password, 'img/base-pfp.png', 1))
             print("Admin user successfully created.")
+
+        # Insert flood history events
+        print("Inserting flood history events...")
+        flood_events = [
+            ("The Rouge River Flood - Most Severe Flood Event", "April 1947", 42.3223, -83.1766, "Rouge River,"),
+            ("Flood Event", "August 2007", 42.3163, -83.2736, "Michigan Avenue"),
+            ("Flood Event", "June 2008", 42.3202, -83.1874, "Outer Drive"),
+            ("Flood Event", "August 2009", 42.3314, -83.2116, "Evergreen Road"),
+            ("Flood Event", "June 2010", 42.3093, -83.2344, "Ford Road"),
+            ("Severe Flood Event", "July 2013", 42.3221, -83.1945, "Greenfield Road"),
+            ("Severe Flood Event", "August 2014", 42.3230, -83.2250, "Rotunda Drive"),
+            ("Most Recent Flooding - Severe Flood Event", "July 2021", 42.3191, -83.1978, "Michigan Avenue & Greenfield, Dearborn, MI"),
+        ]
+
+        for title, date, latitude, longitude, location in flood_events:
+            conn.execute("""
+                INSERT OR IGNORE INTO flood_history (title, date, latitude, longitude, location)
+                VALUES (?, ?, ?, ?, ?)
+            """, (title, date, latitude, longitude, location))
+
+        print("Predefined flood history events inserted successfully.")
 
 setup_database()
