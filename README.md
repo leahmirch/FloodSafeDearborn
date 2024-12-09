@@ -81,6 +81,7 @@ FloodSafeDearborn/
 │   │   ├── evemt_details.html
 │   │   ├── home.html
 │   │   ├── index.html
+│   │   ├── interactive_chart.html
 │   │   ├── layout.html
 │   │   ├── listings.html
 │   │   ├── login.html
@@ -142,14 +143,14 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Added admin controls to manage events and manage users. Admins can now edit event details, including address, duration, date/time, and specific details based on the event type, ensuring accuracy across all records. Additionally, admins have the ability to delete events. Admins can edit user's details like change their email, username, password, and reset their profile picture if needed. The admin can also promote a user to an admin role. Additionally, admins can delete user's accounts
 - Leah Mirch: Added contact, privacy policy and terms of service links
 - Leah Mirch: Added historic flood events onto the map with location and dates. Also added the option to toggle them on and off like other events
+#### 12/09/24
+- Sukeina Ammar: Created statistical page with interactive diagrams, uploaded code
+- Leah Mirch: Integrated statistical page with interactive diagrams into code base
 
 ## Notes
 1. Notification Settings
    - Allow users to configure personalized flood notifications via email.
-2. Statistical Data Section
-   - Create a section to display historical flooding trends and data.
-   - Include high-risk areas and data visualizations.
-3. Additional Submission Requirements
+2. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented

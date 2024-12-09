@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chart</title>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Chart Example</h1>
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        // Render the Plotly chart
+        const chartData = JSON.parse('{{ chart_json|tojson|safe }}');
+        Plotly.newPlot('chart', chartData.data, chartData.layout);
+    </script>    
+</body>
+</html>

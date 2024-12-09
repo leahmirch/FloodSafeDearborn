@@ -9,6 +9,11 @@ from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import plotly.graph_objs as go
+import plotly 
+from flask import jsonify 
+from auth import register_user, authenticate_user
+from database import get_connection
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
@@ -401,10 +406,59 @@ def notification_settings():
 
 @app.route('/statistical_data')
 def statistical_data():
-    if 'user_id' not in session:
-        flash("You must be logged in to view statistical data.", "error")
-        return redirect(url_for('login'))
-    return render_template('statistical_data.html')
+    conn = get_connection()
+    
+    events_by_type = conn.execute("""
+        SELECT type, COUNT(*) AS count
+        FROM events
+        GROUP BY type
+    """).fetchall()
+    
+    severity_distribution = conn.execute("""
+        SELECT severity, COUNT(*) AS count
+        FROM flood_severity
+        GROUP BY severity
+    """).fetchall()
+
+    events_per_year = conn.execute("""
+        SELECT strftime('%Y', time) AS year, COUNT(*) AS count
+        FROM events
+        GROUP BY year
+        ORDER BY year
+    """).fetchall()
+
+    events_by_type_data = [{"type": row["type"], "count": row["count"]} for row in events_by_type]
+    severity_data = [{"severity": row["severity"], "count": row["count"]} for row in severity_distribution]
+    events_per_year_data = [{"year": row["year"], "count": row["count"]} for row in events_per_year]
+
+    return render_template(
+        'statistical_data.html',
+        events_by_type=events_by_type_data,
+        severity_data=severity_data,
+        events_per_year=events_per_year_data
+    )
+
+@app.route('/interactive-chart')
+def interactive_chart():
+    import plotly.graph_objs as go
+    from plotly.utils import PlotlyJSONEncoder
+
+    # Sample data
+    years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
+    damage = [50, 75, 60, 80, 95, 70, 110, 150]
+
+    fig = go.Figure(data=[
+        go.Bar(x=years, y=damage, marker_color='blue', name="Flood Damage")
+    ])
+    fig.update_layout(
+        title="Flood Damage in Dearborn, MI (2014-2021)",
+        xaxis_title="Year",
+        yaxis_title="Damage (in millions of USD)",
+        template="plotly_white"
+    )
+
+    chart_json = json.dumps(fig, cls=PlotlyJSONEncoder)
+    return render_template('interactive_chart.html', chart_json=chart_json)
 
 @app.route('/user_history', methods=['GET', 'POST'])
 def user_history():
