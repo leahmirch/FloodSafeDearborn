@@ -144,11 +144,11 @@ FLASK_ENV=development python backend/app.py
 - Leah Mirch: Integrated statistical page with interactive diagrams into code base
 - Bethany Slone: Created notification settings page, uploaded code
 - Leah Mirch: Integrated temporary notification settings logging into code base
+#### 12/10/24
+- Bethany Slone & Leah Mirch: Configured and finalized oauth2 emailing service with floodsafedearborn@gmail.com email
 
 ## Notes
-1. Notification Settings
-   - Need to send actual email notification, currently just logging the event.
-2. Additional Submission Requirements
+1. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:
     - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented

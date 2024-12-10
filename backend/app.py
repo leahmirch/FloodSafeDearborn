@@ -17,6 +17,17 @@ from database import get_connection
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_mail import Mail, Message
 from database import get_connection
+from flask import Flask
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_mail import Mail, Message
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
 import os
 import logging
 
@@ -25,6 +36,52 @@ app.secret_key = 'secretkey'
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'frontend/static/uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 logging.basicConfig(level=logging.INFO)
+
+mail = Mail(app)
+
+OAUTH2_CREDENTIALS = {
+    "installed": {
+        "client_id": "1067423235928-g7i50mosc030dmjosgb7ahh5538o9oab.apps.googleusercontent.com",
+        "client_secret": "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",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+    }
+}
+
+SCOPES = ['https://www.googleapis.com/auth/gmail.send']
+
+TOKEN_FILE = "token.json"
+
+def get_gmail_credentials():
+    creds = None
+    TOKEN_FILE = "token.json"
+
+    if os.path.exists(TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_config(OAUTH2_CREDENTIALS, SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open(TOKEN_FILE, 'w') as token:
+            token.write(creds.to_json())
+    return creds
+
+def send_email_via_gmail(to_email, subject, body):
+    creds = get_gmail_credentials()
+    service = build('gmail', 'v1', credentials=creds)
+
+    message = f"From: <your-email@gmail.com>\nTo: <{to_email}>\nSubject: {subject}\n\n{body}"
+    raw_message = base64.urlsafe_b64encode(message.encode('utf-8')).decode('utf-8')
+
+    try:
+        send_message = service.users().messages().send(userId='me', body={'raw': raw_message}).execute()
+        print(f"Email sent: {send_message['id']}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise e
 
 @app.route('/')
 def index():
@@ -434,6 +491,11 @@ def notification_settings():
         """, (notify_email, user_id))
 
         conn.commit()
+
+        if notify_email:
+            send_email_via_gmail(email, "Thank you for subscribing!", 
+                                 "Thank you for subscribing to flood notifications from Flood Safe Dearborn!")
+        
         flash("Notification settings updated!", "success")
         return redirect(url_for('notification_settings'))
     
@@ -443,6 +505,14 @@ def notification_settings():
         user_email=settings['email'] if settings else user['email'],
         notify_email=settings['notify_email'] if settings else 0
     )
+
+
+def send_subscription_email(user_email):
+    msg = Message("Thank you for subscribing to flood notifications!",
+                  recipients=[user_email])
+    msg.body = "Thank you for subscribing to flood notifications from Flood Safe Dearborn! Stay safe and stay informed."
+    with app.app_context():
+        mail.send(msg)
 
 @app.route('/statistical_data')
 def statistical_data():

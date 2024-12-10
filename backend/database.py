@@ -132,7 +132,7 @@ def setup_database():
 
         # Insert default admin user
         admin_username = "admin"
-        admin_email = "admin@floodsafe.com"
+        admin_email = "floodsafedearborn@gmail.com"
         admin_password = generate_password_hash("admin123")
         admin_check = conn.execute("SELECT * FROM users WHERE username = ?", (admin_username,)).fetchone()
 
