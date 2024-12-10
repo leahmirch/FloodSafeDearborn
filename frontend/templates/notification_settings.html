@@ -1,7 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">
-    <h1>Notification Settings</h1>
-    <p>Customize how you receive notifications about flood updates.</p>
+<div class="notification-settings-container">
+    <h1 class="notification-settings-title">Notification Settings</h1>
+    <p class="notification-settings-description">Manage your notification preferences to stay informed.</p>
+
+    <!-- Types of Notifications -->
+    <div class="notification-settings-info">
+        <h2>What Notifications Will You Receive?</h2>
+        <ul>
+            <li><strong>Flood Events:</strong> Notifications about new flood reports in your area.</li>
+            <li><strong>Closed Roads:</strong> Alerts about road closures due to flooding.</li>
+            <li><strong>Water Levels:</strong> Updates on rising water levels near monitored locations.</li>
+            <li><strong>Traffic Conditions:</strong> Notifications about traffic disruptions caused by floods.</li>
+        </ul>
+    </div>
+
+    <!-- Notification Settings Form -->
+    <form method="POST" action="{{ url_for('notification_settings') }}" class="notification-settings-form">
+        <div class="notification-settings-input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" value="{{ user_email }}" required>
+        </div>
+
+        <div class="notification-settings-checkbox-group">
+            <input type="checkbox" id="emailNotifications" name="notify_email" {% if notify_email %}checked{% endif %}>
+            <label for="emailNotifications">Receive Email Notifications</label>
+            <p> </p>
+        </div>
+        <button type="submit" class="notification-settings-button">Save Settings</button>
+    </form>
 </div>
 {% endblock %}

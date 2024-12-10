@@ -14,11 +14,17 @@ import plotly
 from flask import jsonify 
 from auth import register_user, authenticate_user
 from database import get_connection
+from flask import Flask, render_template, request, session, redirect, url_for, flash
+from flask_mail import Mail, Message
+from database import get_connection
+import os
+import logging
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'frontend/static/uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+logging.basicConfig(level=logging.INFO)
 
 @app.route('/')
 def index():
@@ -296,6 +302,13 @@ def submit_event():
                 traffic_span = request.form.get('traffic_span')
                 conn.execute("INSERT INTO traffic_conditions (event_id, description) VALUES (?, ?)", (event_id, f"{traffic_level}: {traffic_span}"))
 
+            subscribers = conn.execute("""
+                SELECT email FROM notifications WHERE notify_email = 1
+            """).fetchall()
+
+            for subscriber in subscribers:
+                logging.info(f"Mock Email Sent: A new {event_type} event was added at {street}, {city}, {state}, {zip_code}. Sent to {subscriber['email']}")
+
         flash("Event submitted successfully!", "success")
         return redirect(url_for('home'))
 
@@ -397,12 +410,39 @@ def manage_account():
     user = conn.execute("SELECT email, profile_picture FROM users WHERE id = ?", (user_id,)).fetchone()
     return render_template('manage_account.html', user=user)
 
-@app.route('/notification_settings')
+@app.route('/notification_settings', methods=['GET', 'POST'])
 def notification_settings():
     if 'user_id' not in session:
-        flash("You must be logged in to access notification settings.", "error")
+        flash("You must be logged in to manage notifications.", "error")
         return redirect(url_for('login'))
-    return render_template('notification_settings.html')
+    
+    user_id = session['user_id']
+    conn = get_connection()
+    user = conn.execute("SELECT email FROM users WHERE id = ?", (user_id,)).fetchone()
+
+    if request.method == 'POST':
+        email = request.form['email']
+        notify_email = 1 if request.form.get('notify_email') else 0
+        
+        conn.execute("""
+            INSERT OR REPLACE INTO notifications (user_id, email, notify_email)
+            VALUES (?, ?, ?)
+        """, (user_id, email, notify_email))
+
+        conn.execute("""
+            UPDATE users SET subscriber = ? WHERE id = ?
+        """, (notify_email, user_id))
+
+        conn.commit()
+        flash("Notification settings updated!", "success")
+        return redirect(url_for('notification_settings'))
+    
+    settings = conn.execute("SELECT email, notify_email FROM notifications WHERE user_id = ?", (user_id,)).fetchone()
+    return render_template(
+        'notification_settings.html',
+        user_email=settings['email'] if settings else user['email'],
+        notify_email=settings['notify_email'] if settings else 0
+    )
 
 @app.route('/statistical_data')
 def statistical_data():

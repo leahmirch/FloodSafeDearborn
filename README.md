@@ -69,10 +69,6 @@ FloodSafeDearborn/
 │   ├── auth.py             
 │   └── database.py         
 ├── frontend/
-│   ├── figma/    
-│   │   ├── homepage.zip
-│   │   ├── interactive_map.zip
-│   │   └── user_dashboard.zip
 │   ├── templates/          
 │   │   ├── about.html
 │   │   ├── admin_manage_events.html
@@ -146,10 +142,12 @@ FLASK_ENV=development python backend/app.py
 #### 12/09/24
 - Sukeina Ammar: Created statistical page with interactive diagrams, uploaded code
 - Leah Mirch: Integrated statistical page with interactive diagrams into code base
+- Bethany Slone: Created notification settings page, uploaded code
+- Leah Mirch: Integrated temporary notification settings logging into code base
 
 ## Notes
 1. Notification Settings
-   - Allow users to configure personalized flood notifications via email.
+   - Need to send actual email notification, currently just logging the event.
 2. Additional Submission Requirements
 - design 10 test cases to verify that the functionality is correctly implemented
 - deliverables:

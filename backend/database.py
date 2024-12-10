@@ -20,7 +20,8 @@ def setup_database():
                 email TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 profile_picture TEXT DEFAULT 'img/base-pfp.png',
-                admin INTEGER DEFAULT 0 CHECK(admin IN (0, 1))
+                admin INTEGER DEFAULT 0 CHECK(admin IN (0, 1)),
+                subscriber INTEGER DEFAULT 0 CHECK(subscriber IN (0, 1))
             )
         """)
         
@@ -47,6 +48,18 @@ def setup_database():
             CREATE INDEX IF NOT EXISTS idx_events_time ON events (time DESC)
         """)
         
+        # Notifications table
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                email TEXT,
+                notify_email INTEGER DEFAULT 0 CHECK(notify_email IN (0, 1)),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        """)
+
         # Water levels table
         conn.execute("""
             CREATE TABLE IF NOT EXISTS water_levels (
