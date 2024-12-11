@@ -10,14 +10,15 @@
             Between 2018 and 2023, Dearborn experienced multiple significant flood events, with rising trends of moderate to severe flooding. Events include infrastructure failures and overflow from the Rouge River, which runs through the city. FEMA and NOAA reports indicate an increasing frequency of high-risk events due to changing climate conditions.
         </p>
     </section>
-    
+
     <hr>
 
     <!-- Events by Type -->
     <section>
-        <h3><strong>Flood Events by Type</strong></h3>
+        <h3><strong>Overview of Flood Event Charts</strong></h3>
         <p>
-            This chart categorizes the types of flooding events reported, including water levels, flood severity assessments, road closures, flood risk assessments, and traffic disruptions.
+            The following charts provide a comprehensive analysis of flood severity from 2018 to 2023, categorized into Low, Moderate, and High severity levels. The second graph highlights the average annual rainfall, showing that while 2019 experienced the highest precipitation, 2021 incurred the most significant damage to homes and infrastructure. 
+            Users can interact with the visualizations by hovering over the pie chart to view the percentage contribution of each severity level and over the line graph to see precise average precipitation values for each year.
         </p>
         <div id="events-by-type"></div>
     </section>
@@ -28,7 +29,10 @@
     <section>
         <h3><strong>Flood Severity Distribution</strong></h3>
         <p>
-            The chart below highlights the severity levels of reported flood events. Approximately half of all flood events in Dearborn are categorized as "Low Severity," while "Moderate" and "High" severity events constitute a significant portion of the risk.
+            The chart below highlights the severity levels of reported flood events. 
+            Approximately half of all flood events in Dearborn are categorized as "Low Severity," while "Moderate" and "High" severity events constitute a significant portion of the risk.
+            The years 2018, 2020, and 2023 are categorized as low severity because there were either no major flood events and minimal reports of flooding events. 2019 and 2022 were placed under moderate severity due to the several localized flooding events within Southeast Michigan. 
+            The year 2021 is categorized as the most catastrophic year due to severe storms and widespread impacts within Dearborn. 
         </p>
         <div id="flood-severity"></div>
     </section>
@@ -39,7 +43,7 @@
     <section>
         <h3><strong>Flood Events Over Time</strong></h3>
         <p>
-            Historical flood trends in Dearborn from 2018 to 2023 show an upward trajectory in flood frequency, particularly between 2019 and 2021. Efforts to mitigate these issues include federal and local infrastructure improvements.
+            Historical flood trends in Dearborn from 2018 to 2023 show an upward trajectory in flood frequency, particularly between 2019 and 2021. Efforts to mitigate these issues include federal and local infrastructure improvements.  Sewers in Dearborn were built to withstand three inches of rain during a 24-hour period. The average monthly amount of rain within Southeast Michigan is between 3-4 inches.
         </p>
         <div id="flood-events-over-time"></div>
     </section>
@@ -55,6 +59,11 @@
             <li>
                 <a href="https://msc.fema.gov" target="_blank">FEMA Flood Map Service Center</a>
             </li>
+
+            <li>
+                <a href="https://dearborn.gov/residents/flood-preparedness-%26-recovery#" target="_blank">Flood Preparedness & Recovery</a>
+            </li>
+
             <li>
                 Regional Flood Risk Assessments (Dearborn Reports, 2023)
             </li>
@@ -64,44 +73,37 @@
 
 <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
 <script>
-    const eventsByType = [
-        {
-            x: ['Water Levels', 'Flood Severity', 'Closed Roads', 'Flood Reports', 'Traffic Conditions'],
-            y: [50, 30, 25, 20, 15],
-            type: 'bar',
-            marker: { color: 'blue' }
-        }
-    ];
-    Plotly.newPlot('events-by-type', eventsByType, {
-        title: 'Flood Events by Type',
-        xaxis: { title: 'Event Type' },
-        yaxis: { title: 'Number of Events' }
-    });
+  //place it here
 
     const floodSeverity = [
         {
             labels: ['Low', 'Moderate', 'High'],
-            values: [50, 35, 15],
+            values: [50, 33.3, 16.67],
             type: 'pie',
-            marker: { colors: ['#1f77b4', '#ff7f0e', '#d62728'] }
+            marker: { colors: ['#1f77b4', '#ff7f0e', '#d62728'] },
+            text: ['2018, 2020, 2023', '2019, 2022', '2021'], //display text on the pie chart to signify the years 
+            textinfo: 'text', // Display the custom text (years) on the pie chart
+            hoverinfo: 'label+value' // Show label and value on hover
+
         }
     ];
     Plotly.newPlot('flood-severity', floodSeverity, {
         title: 'Flood Severity Distribution'
     });
 
+    
     const eventsOverTime = [
         {
             x: ['2018', '2019', '2020', '2021', '2022', '2023'],
-            y: [5, 8, 12, 15, 9, 10],
+            y: [38.0, 41.8, 36.5, 37.2, 35.8, 36.0],
             type: 'line',
-            line: { color: 'green' }
+            line: { color: 'blue' }
         }
     ];
     Plotly.newPlot('flood-events-over-time', eventsOverTime, {
-        title: 'Flood Events Over Time',
+        title: 'Average Precipitation within Dearborn, MI',
         xaxis: { title: 'Year' },
-        yaxis: { title: 'Number of Events' }
+        yaxis: { title: 'Average Precipitation (Inches)' }
     });
 </script>
 {% endblock %}

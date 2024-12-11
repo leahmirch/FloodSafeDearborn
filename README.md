@@ -165,6 +165,7 @@ FLASK_ENV=development python backend/app.py
 #### 12/10/24
 - Bethany Slone & Leah Mirch: Configured oauth2 emailing service with floodsafedearborn@gmail.com email
 - Leah Mirch: Finalized oauth2 emailing service with floodsafedearborn@gmail.com email, tested with different authorized emails and events
+- Sukeina Ammar: Updated statistical data page graphs with accurate data and text
 
 ## Notes
 No notes at the time.
