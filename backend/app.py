@@ -1,35 +1,22 @@
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, jsonify
 from auth import register_user, authenticate_user
 from database import get_connection
-import os
-from flask import Flask, send_from_directory
+from flask_mail import Mail, Message
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 from datetime import datetime, timedelta
-import json
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import plotly.graph_objs as go
-import plotly 
-from flask import jsonify 
-from auth import register_user, authenticate_user
-from database import get_connection
-from flask import Flask, render_template, request, session, redirect, url_for, flash
-from flask_mail import Mail, Message
-from database import get_connection
-from flask import Flask
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_mail import Mail, Message
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+import plotly
 import os
 import logging
+import json
+import base64
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'secretkey'
@@ -57,14 +44,18 @@ def get_gmail_credentials():
     TOKEN_FILE = "token.json"
 
     if os.path.exists(TOKEN_FILE):
-        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+        try:
+            creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+        except Exception as e:
+            print("Error loading credentials:", e)
+            os.remove(TOKEN_FILE)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_config(OAUTH2_CREDENTIALS, SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_local_server(port=8080)
         with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
     return creds
@@ -363,8 +354,22 @@ def submit_event():
                 SELECT email FROM notifications WHERE notify_email = 1
             """).fetchall()
 
+            email_subject = f"New {event_type.replace('_', ' ').title()} Event Added"
+            email_body = f"""
+            A new {event_type.replace('_', ' ').title()} event has been reported:
+            Location: {street}, {city}, {state}, {zip_code}
+            Type: {event_type.replace('_', ' ').title()}
+            Duration: {duration} hours
+
+            Please visit Flood Safe Dearborn for more details.
+            """
+
             for subscriber in subscribers:
-                logging.info(f"Mock Email Sent: A new {event_type} event was added at {street}, {city}, {state}, {zip_code}. Sent to {subscriber['email']}")
+                try:
+                    send_email_via_gmail(subscriber['email'], email_subject, email_body)
+                    logging.info(f"Email sent successfully to {subscriber['email']}")
+                except Exception as e:
+                    logging.error(f"Failed to send email to {subscriber['email']}: {e}")
 
         flash("Event submitted successfully!", "success")
         return redirect(url_for('home'))
@@ -463,7 +468,6 @@ def manage_account():
 
         return redirect(url_for('manage_account'))
 
-    # Fetch current user info
     user = conn.execute("SELECT email, profile_picture FROM users WHERE id = ?", (user_id,)).fetchone()
     return render_template('manage_account.html', user=user)
 
@@ -505,7 +509,6 @@ def notification_settings():
         user_email=settings['email'] if settings else user['email'],
         notify_email=settings['notify_email'] if settings else 0
     )
-
 
 def send_subscription_email(user_email):
     msg = Message("Thank you for subscribing to flood notifications!",
@@ -553,7 +556,6 @@ def interactive_chart():
     import plotly.graph_objs as go
     from plotly.utils import PlotlyJSONEncoder
 
-    # Sample data
     years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
     damage = [50, 75, 60, 80, 95, 70, 110, 150]
 

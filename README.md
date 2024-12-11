@@ -1,24 +1,46 @@
-# Flood-Safe Dearborn
+# FloodSafeDearborn
 
-The FloodSafeDearborn project is providing real-time flooding information in an interactive method for residents of Dearborn, Michigan. Dearborn, like many parts of Metro Detroit, has areas with low elevations, which ultimately can lead to water accumulation during heavy rains. For example, the Rouge River, which runs through the city of Dearborn, can overflow during significant rain events, further contributing to flooding. In addition to this, Dearborn has an aging sewer and drainage system and like many older cities in the U.S, has combined sewer systems where stormwater and sewage are handled by the same pipes. This means that, during heavy rainfall, the system itself can become overwhelmed, causing flooding in streets, homes, and basements. This is precisely why FloodSafeDearborn is needed to assist in the protection of the Dearborn area and its residents.
+**FloodSafeDearborn** provides **real-time flooding information** and resources to the residents of **Dearborn, Michigan**, helping them stay informed, safe, and prepared during flood events. Dearborn's low elevations, overflow-prone Rouge River, and aging combined sewer systems make it highly vulnerable to flooding, especially during heavy rains. This platform addresses these challenges by offering interactive tools, alerts, and preparedness resources to mitigate flood risks in the community.
 
-With all of this information in mind, FloodSafeDearborn focuses on the accessibility of real-time data regarding active flooding in Dearborn communities. The project itself will be broken down more specifically in the implementation plan, however it is important to mention a few key features the project will have, such as: interactive flooding maps showing flood hotspots, a notification system to alert users of flooding near their address, and data analytics for emergency routes due to flooding. With the ability to to interact with flooding maps in order to view and alert other community members of flooding in the area, FloodSafeDearborn aims to enhance access to resources and mitigate risks involved with flooding in the urban community. In addition to the technical attributes of the project, there will additionally be accessibility to professional resources such as the Wayne County Drain Commissioner, and resources for homeowners on flood preparedness. This project offers a significant advantage by empowering residents to protect their homes and themselves through staying informed and updated at all times.
+## Features  
 
-## Features
+- **Interactive Flood Map**  
+  Displays real-time and historical flooding data on an **interactive map**, highlighting active flood hotspots and allowing users to report new events. Events are categorized by water levels, severity, closed roads, traffic conditions, and flood risks, with dynamic icons and descriptions for clarity.
 
-- **Interactive Flood Map**: Displays real-time flood data on an interactive map to help residents identify flood-prone areas and take necessary precautions.
-- **Notification System**: Allows users to set up alerts for flooding near their location, enabling timely evacuation or preparations.
-- **Data Analytics for Emergency Routes**: Provides information on safe routes during flood events, helping users avoid flooded areas.
-- **Flood Preparedness Resources**: Offers resources and links to professional organizations, such as the Wayne County Drain Commissioner, and homeowner tips for flood preparedness.
-- **Customizable User Experience**: Users can personalize their settings for receiving alerts and accessing resources.
+- **Flood Alerts and Notifications**  
+  Users can configure **personalized notifications** via email to receive alerts about floods, road closures, rising water levels, and other critical updates near their location.  
+
+- **User Event Reporting**  
+  Community members can seamlessly submit **flood event reports** using an intuitive form. Location input is simplified through address search (powered by **Mapbox**) and current location access. Reports appear dynamically on the interactive map for all users.  
+
+- **Data Analytics for Emergency Routes**  
+  Provides insights into safe **emergency routes** and alternative paths during flood events, helping users avoid dangerous, waterlogged areas.
+
+- **Flood Preparedness Resources**  
+  Access resources, including homeowner flood preparedness guides, evacuation routes, safety tips, and professional contacts like the **Wayne County Drain Commissioner**.
+
+- **User Account Management**  
+  Users can **register**, log in, and manage their profiles, including updating email, passwords, and profile pictures. Notifications and flood event settings can be customized for a tailored user experience.
+
+- **Data Visualization and Historical Trends**  
+  The platform offers statistical analysis and **interactive charts** using Plotly to visualize flooding trends, severity levels, and high-risk areas over time, providing valuable insights for residents and emergency planners.
+
+- **Admin Tools**  
+  Administrators can manage flood event reports and user accounts efficiently, ensuring data accuracy and platform integrity.
+
+## Why FloodSafeDearborn?  
+
+- Empowers residents to stay informed about flood risks.  
+- Enhances community preparedness with real-time alerts and reliable flood reporting tools.  
+- Provides data-driven insights for safer emergency responses and flood mitigation.  
+- Offers essential resources for residents and local authorities to protect homes and infrastructure.  
 
 ## How to Use
 
-### Instructions to Run the Converted Project
+### Instructions to Run the Project
 
 #### **1. Install Python**
 Ensure you have Python 3.7 or later installed on your system. You can download it from [python.org](https://www.python.org/).
-
 
 #### **2. Install Required Libraries**
 Open a terminal or command prompt, navigate to the project directory, and install the required Python libraries:
@@ -41,19 +63,15 @@ To manually initialize or verify the database:
 This will create a `user_db.sqlite` file in the project directory with a table called `users`.
 
 #### **4. Start the Flask Application**
-Run the Flask application from the `backend` folder. Navigate to the `backend/` directory in your terminal and execute:
+Run the Flask application from the `backend` folder.
 
 ```bash
 python backend/app.py
 ```
 
-By default, the Flask server will start on `http://127.0.0.1:5000`.
-
 #### **5. Access the Application**
 Open a web browser and go to the following URLs:
-- **Registration Page**: `http://127.0.0.1:5000/register`
-- **Login Page**: `http://127.0.0.1:5000/login`
-- **Home Page** (after login): `http://127.0.0.1:5000/home`
+By default, the Flask server will start on `http://127.0.0.1:5000`.
 
 #### **6. Folder Structure**
 Ensure your project folder structure looks like this:
@@ -145,11 +163,8 @@ FLASK_ENV=development python backend/app.py
 - Bethany Slone: Created notification settings page, uploaded code
 - Leah Mirch: Integrated temporary notification settings logging into code base
 #### 12/10/24
-- Bethany Slone & Leah Mirch: Configured and finalized oauth2 emailing service with floodsafedearborn@gmail.com email
+- Bethany Slone & Leah Mirch: Configured oauth2 emailing service with floodsafedearborn@gmail.com email
+- Leah Mirch: Finalized oauth2 emailing service with floodsafedearborn@gmail.com email, tested with different authorized emails and events
 
 ## Notes
-1. Additional Submission Requirements
-- design 10 test cases to verify that the functionality is correctly implemented
-- deliverables:
-    - report: no more than 5 pages in PDF format, using screenshots to describe what has been implemented
-    - time card: an excel file detailing the hours each team member has worked on specific tasks
+No notes at the time.
