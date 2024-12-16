@@ -13,9 +13,6 @@
 - **User Event Reporting**  
   Community members can seamlessly submit **flood event reports** using an intuitive form. Location input is simplified through address search (powered by **Mapbox**) and current location access. Reports appear dynamically on the interactive map for all users.  
 
-- **Data Analytics for Emergency Routes**  
-  Provides insights into safe **emergency routes** and alternative paths during flood events, helping users avoid dangerous, waterlogged areas.
-
 - **Flood Preparedness Resources**  
   Access resources, including homeowner flood preparedness guides, evacuation routes, safety tips, and professional contacts like the **Wayne County Drain Commissioner**.
 
@@ -119,7 +116,9 @@ FloodSafeDearborn/
 │       │   ├── page_content.json
 │       │   └── dearborn-boundary.json
 │       ├── uploads/
-│       └── img/        
+│       └── img/
+├── procfile
+├── requirements.txt   
 └── floodsafe_db.sqlite # SQLite database (created after setup or run "python backend/database.py")
 ```
 
@@ -166,6 +165,8 @@ FLASK_ENV=development python backend/app.py
 - Bethany Slone & Leah Mirch: Configured oauth2 emailing service with floodsafedearborn@gmail.com email
 - Leah Mirch: Finalized oauth2 emailing service with floodsafedearborn@gmail.com email, tested with different authorized emails and events
 - Sukeina Ammar: Updated statistical data page graphs with accurate data and text
+#### 12/16/24
+- Sukeina Ammar: Added procfile and requirements.txt files
 
 ## Notes
 No notes at the time.
