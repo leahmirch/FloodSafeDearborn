@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, jsonify
-from auth import register_user, authenticate_user
+from .auth import register_user, authenticate_user
 from database import get_connection
 from flask_mail import Mail, Message
 from google.auth.transport.requests import Request
